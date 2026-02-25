@@ -1,0 +1,52 @@
+package com.pedidos.application.service;
+
+import com.pedidos.domain.model.Usuario;
+import com.pedidos.domain.repository.AdminRepository;
+import com.pedidos.domain.repository.ClienteRepository;
+import com.pedidos.domain.repository.RestauranteRepository;
+
+import java.security.MessageDigest;
+
+public class AutenticacaoService {
+    private final AdminRepository adminRepository;
+    private final RestauranteRepository restauranteRepository;
+    private final ClienteRepository clienteRepository;
+
+    public AutenticacaoService(AdminRepository adminRepository, RestauranteRepository restauranteRepository, ClienteRepository clienteRepository) {
+        this.adminRepository = adminRepository;
+        this.restauranteRepository = restauranteRepository;
+        this.clienteRepository = clienteRepository;
+    }
+
+    public String hashSenha(String senha) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(senha.getBytes("UTF-8"));
+
+            StringBuilder hexString = new StringBuilder();
+            for(byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar hash da senha", e);
+        }
+    }
+
+    public Usuario autenticar(String email, String senha) {
+        String senhaHash = hashSenha(senha);
+
+        Usuario usuario = adminRepository.buscarPorEmailSenha(email, senhaHash);
+        if(usuario != null) return usuario;
+
+        usuario = restauranteRepository.buscarPorEmailSenha(email, senhaHash);
+        if(usuario != null) return usuario;
+
+        usuario = clienteRepository.buscarPorEmailSenha(email, senhaHash);
+        if(usuario != null) return usuario;
+
+        throw new RuntimeException("Email ou senha inválidos.");
+    }
+}
