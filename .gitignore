@@ -1,0 +1,123 @@
+# =============================================
+# JAVA
+# =============================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# =============================================
+# MAVEN
+# =============================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# =============================================
+# INTELLIJ IDEA
+# =============================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# =============================================
+# ECLIPSE
+# =============================================
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# =============================================
+# VSCODE
+# =============================================
+.vscode/
+*.code-workspace
+
+# =============================================
+# NETBEANS
+# =============================================
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# =============================================
+# SISTEMA OPERACIONAL
+# =============================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+
+# =============================================
+# GITHUB COPILOT
+# =============================================
+.github/copilot-instructions.md
+.copilot/
+.copilotignore
+
+# =============================================
+# CLAUDE / ANTHROPIC
+# =============================================
+.claude/
+CLAUDE.md
+.anthropic/
+
+# =============================================
+# IA EM GERAL (Cursor, Codeium, Tabnine...)
+# =============================================
+.cursor/
+.codeium/
+.tabnine/
+.aider*
+
+# =============================================
+# LOGS E TEMPORÁRIOS
+# =============================================
+*.log
+*.logs
+logs/
+log/
