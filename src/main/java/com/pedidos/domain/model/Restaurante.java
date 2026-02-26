@@ -1,5 +1,7 @@
 package com.pedidos.domain.model;
 
+import com.pedidos.domain.enums.TipoUsuario;
+
 import java.util.UUID;
 
 public class Restaurante extends Usuario {
@@ -9,11 +11,10 @@ public class Restaurante extends Usuario {
     private int categoriaGlobalId;
 
 
-    public Restaurante(UUID uuid, String nome, String email, String senha,String cnpj, int categoriaGlobalId) {
-        super(uuid, nome, email, senha);
+    public Restaurante(String nome, String email, String senhaHash,String cnpj) {
+        super(nome, email, senhaHash, TipoUsuario.RESTAURANTE);
         this.cnpj = cnpj;
         this.statusAtivo = false;
-        this.categoriaGlobalId = categoriaGlobalId;
     }
 
     public boolean isStatusAtivo() {

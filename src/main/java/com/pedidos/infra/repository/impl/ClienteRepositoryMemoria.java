@@ -1,11 +1,11 @@
 package com.pedidos.infra.repository.impl;
 
 import com.pedidos.domain.model.Usuario;
-import com.pedidos.domain.repository.RestauranteRepository;
+import com.pedidos.domain.repository.ClienteRepository;
 
 import java.util.*;
 
-public class RestauranteRepositoryImpl implements RestauranteRepository {
+public class ClienteRepositoryMemoria implements ClienteRepository {
 
     private final List<Usuario> lista = new ArrayList<>();
 
@@ -17,6 +17,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     @Override
     public Optional<Usuario> buscarPorId(Long id) {
+        // UUID-based repo — id por Long não aplicável nesta implementação
         return Optional.empty();
     }
 

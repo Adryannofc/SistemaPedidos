@@ -1,23 +1,27 @@
 
 package com.pedidos.domain.model;
 
+import com.pedidos.domain.enums.TipoUsuario;
+
 import java.util.UUID;
 
 public abstract class Usuario {
-    private UUID uuid = UUID.randomUUID();
+    private String id;
     private String nome;
     private String email;
     private String senhaHash;
+    private TipoUsuario tipoUsuario;
 
-    public Usuario(UUID uuid, String nome, String email, String senha) {
-        this.uuid = uuid;
+    public Usuario(String nome, String email, String senhaHash, TipoUsuario tipoUsuario) {
+        this.id = UUID.randomUUID().toString();
         this.nome = nome;
         this.email = email;
-        this.senhaHash = senha;
+        this.senhaHash = senhaHash;
+        this.tipoUsuario = tipoUsuario;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public String getUuid() {
+        return id;
     }
 
     public String getNome() {
@@ -59,6 +63,11 @@ public abstract class Usuario {
         } else {
             System.err.println("A senha deve ter 8+ caracteres, incluindo maiúscula, número e símbolo.");
         }
+    }
 
+    public TipoUsuario getTipoUsuario() { return tipoUsuario; }
+
+    public boolean verificarSenha(String senhaHash) {
+        return this.senhaHash.equals(senhaHash);
     }
 }

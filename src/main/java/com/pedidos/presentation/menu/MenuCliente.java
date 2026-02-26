@@ -1,16 +1,22 @@
 package com.pedidos.presentation.menu;
 
+import com.pedidos.domain.model.Usuario;
 import com.pedidos.presentation.util.EntradaSegura;
-
+import com.pedidos.presentation.util.TerminalUtils;
 import java.util.Scanner;
 
 public class MenuCliente {
-
     public static Scanner scn = new Scanner(System.in);
+    private final Usuario usuario;
 
-    public static void exibir(){
+    public MenuCliente(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
+    public void iniciar(){
         while (true){
+            TerminalUtils.limparTela();
+            TerminalUtils.cabecalho(usuario.getNome());
             System.out.println(" 1 - Ver restaurantes");
             System.out.println(" 2 - Fazer pedido");
             System.out.println(" 3 - Meus pedidos");
