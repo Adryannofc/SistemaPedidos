@@ -59,6 +59,9 @@ public abstract class Usuario {
         } else {
             System.err.println("A senha deve ter 8+ caracteres, incluindo maiúscula, número e símbolo.");
         }
+    }
 
+    public boolean verificarSenha(String senhaHash) {
+        return this.senhaHash.equals(senhaHash);
     }
 }
