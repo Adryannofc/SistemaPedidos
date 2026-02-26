@@ -1,11 +1,11 @@
 package com.pedidos.infra.repository.impl;
 
 import com.pedidos.domain.model.Usuario;
-import com.pedidos.domain.repository.AdminRepository;
+import com.pedidos.domain.repository.RestauranteRepository;
 
 import java.util.*;
 
-public class AdminRepositoryImpl implements AdminRepository {
+public class RestauranteRepositoryMemoria implements RestauranteRepository {
 
     private final List<Usuario> lista = new ArrayList<>();
 
