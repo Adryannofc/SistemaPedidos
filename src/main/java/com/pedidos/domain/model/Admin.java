@@ -1,23 +1,13 @@
 package com.pedidos.domain.model;
 
+import com.pedidos.domain.enums.TipoUsuario;
+
 import java.util.UUID;
 
 public class Admin extends Usuario{
 
-    private int nivelAcesso;
+    public Admin(String nome, String email, String senhaHash) {
+        super(nome, email, senhaHash, TipoUsuario.ADMIN);
 
-    public Admin(UUID uuid, String nome, String email, String senha, int nivelAcesso) {
-        super(uuid, nome, email, senha);
-
-        this.nivelAcesso = nivelAcesso;
-
-    }
-
-    public int getNivelAcesso() {
-        return nivelAcesso;
-    }
-
-    public void setNivelAcesso(int nivelAcesso) {
-        this.nivelAcesso = nivelAcesso;
     }
 }
