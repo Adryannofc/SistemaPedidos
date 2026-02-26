@@ -5,6 +5,7 @@ import com.pedidos.domain.repository.AdminRepository;
 import com.pedidos.domain.repository.ClienteRepository;
 import com.pedidos.domain.repository.RestauranteRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 public class AutenticacaoService {
@@ -21,7 +22,7 @@ public class AutenticacaoService {
     public String hashSenha(String senha) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(senha.getBytes("UTF-8"));
+            byte[] hashBytes = digest.digest(senha.getBytes(StandardCharsets.UTF_8));
 
             StringBuilder hexString = new StringBuilder();
             for(byte b : hashBytes) {
