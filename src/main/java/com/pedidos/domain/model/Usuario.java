@@ -4,13 +4,13 @@ package com.pedidos.domain.model;
 import java.util.UUID;
 
 public abstract class Usuario {
-    private UUID uuid = UUID.randomUUID();
+    private final UUID uuid; // 'final' impede que o ID seja trocado depois de criado
     private String nome;
     private String email;
     private String senhaHash;
 
     public Usuario(UUID uuid, String nome, String email, String senha) {
-        this.uuid = uuid;
+        this.uuid = (uuid != null) ? uuid : UUID.randomUUID();
         this.nome = nome;
         this.email = email;
         this.senhaHash = senha;
@@ -29,7 +29,7 @@ public abstract class Usuario {
         if (nome != null && nome.matches(regexLetras)) {
             this.nome = nome.trim();
         } else {
-            System.err.println("Nome inválido! Utilize apenas letras.");
+            throw new IllegalArgumentException("Nome inválido! Utilize apenas letras.");
         }
 
     }
@@ -43,7 +43,7 @@ public abstract class Usuario {
         if (email != null && email.matches(validarFormatoEmail)) {
             this.email = email.toLowerCase().trim();
         } else {
-            System.err.println("Email inválido.");
+            throw new IllegalArgumentException("Email inválido.");
         }
 
     }
@@ -57,7 +57,7 @@ public abstract class Usuario {
         if (senha != null && senha.matches(regexSenha)) {
             this.senhaHash = senha;
         } else {
-            System.err.println("A senha deve ter 8+ caracteres, incluindo maiúscula, número e símbolo.");
+            throw new IllegalArgumentException("A senha deve ter 8+ caracteres, incluindo maiúscula, número e símbolo.");
         }
 
     }
