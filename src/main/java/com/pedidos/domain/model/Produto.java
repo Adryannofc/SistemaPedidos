@@ -5,31 +5,23 @@ import java.util.UUID;
 
 public class Produto {
 
-    private final UUID uuid;
+    private final String id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
-    private boolean disponivel;
+    private String categoriaCardapioId;
+    private String restauranteId;
+    private boolean statusAtivo;
 
     // Construtor completo — carregado do banco (UUID já existente)
-    public Produto(UUID uuid, String nome, String descricao, BigDecimal preco) {
-        if (uuid == null) {
-            throw new IllegalArgumentException("UUID não pode ser nulo.");
-        }
-        this.uuid = uuid;
+    public Produto(String nome, String descricao, BigDecimal preco, String categoriaCardapioId, String restauranteId) {
+        this.id = UUID.randomUUID().toString();
         setNome(nome);
         setDescricao(descricao);
         setPreco(preco);
-        this.disponivel = true;
-    }
-
-    // Construtor de criação — UUID gerado automaticamente
-    public Produto(String nome, String descricao, BigDecimal preco) {
-        this(UUID.randomUUID(), nome, descricao, preco);
-    }
-
-    public UUID getUuid() {
-        return uuid;
+        this.categoriaCardapioId = categoriaCardapioId;
+        this.restauranteId = restauranteId;
+        this.statusAtivo = true; // começa ativo por padrão
     }
 
     public String getNome() {
@@ -41,6 +33,26 @@ public class Produto {
             throw new IllegalArgumentException("Nome do produto não pode ser nulo ou vazio.");
         }
         this.nome = nome.trim();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCategoriaCardapioId() {
+        return categoriaCardapioId;
+    }
+
+    public String getRestauranteId() {
+        return restauranteId;
+    }
+
+    public boolean isStatusAtivo() {
+        return statusAtivo;
+    }
+
+    public void setStatusAtivo(boolean statusAtivo) {
+        this.statusAtivo = statusAtivo;
     }
 
     public String getDescricao() {
@@ -60,14 +72,6 @@ public class Produto {
             throw new IllegalArgumentException("Preço não pode ser nulo ou negativo.");
         }
         this.preco = preco;
-    }
-
-    public boolean isDisponivel() {
-        return disponivel;
-    }
-
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
     }
 }
 

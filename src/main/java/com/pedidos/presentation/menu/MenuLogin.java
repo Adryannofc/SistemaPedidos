@@ -3,8 +3,8 @@ package com.pedidos.presentation.menu;
 import com.pedidos.application.service.AutenticacaoService;
 import com.pedidos.domain.model.Usuario;
 import com.pedidos.presentation.util.EntradaSegura;
+import com.pedidos.presentation.util.TerminalUtils;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class MenuLogin {
@@ -16,6 +16,7 @@ public class MenuLogin {
 
     public void iniciar() {
         while (true) {
+            TerminalUtils.limparTela();
             System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
             System.out.println("║                                    LOGIN                                     ║");
             System.out.println("╚══════════════════════════════════════════════════════════════════════════════╝");
