@@ -32,7 +32,7 @@ public class AutenticacaoService {
             }
             return hexString.toString();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar hash da senha", e);
+            throw new IllegalArgumentException ("Erro ao gerar hash da senha", e);
         }
     }
 
