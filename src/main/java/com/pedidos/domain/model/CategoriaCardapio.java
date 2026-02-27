@@ -1,5 +1,5 @@
 package com.pedidos.domain.model;
 
-public class Endereco {
+public class CategoriaCardapio {
 
 }
