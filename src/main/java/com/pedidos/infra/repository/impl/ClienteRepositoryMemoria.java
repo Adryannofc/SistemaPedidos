@@ -7,18 +7,16 @@ import java.util.*;
 
 public class ClienteRepositoryMemoria implements ClienteRepository {
 
-    private final List<Usuario> lista = new ArrayList<>();
+    private final HashMap<String, Usuario> storage = new HashMap<>();
 
     @Override
     public void salvar(Usuario usuario) {
-        lista.removeIf(u -> u.getUuid().equals(usuario.getUuid()));
-        lista.add(usuario);
+        storage.put(usuario.getUuid().toString(), usuario);
     }
 
     @Override
-    public Optional<Usuario> buscarPorId(Long id) {
-        // UUID-based repo — id por Long não aplicável nesta implementação
-        return Optional.empty();
+    public Optional<Usuario> buscarPorId(String id) {
+        return Optional.ofNullable(storage.get(id));
     }
 
     /**
@@ -27,7 +25,7 @@ public class ClienteRepositoryMemoria implements ClienteRepository {
      */
     @Override
     public Optional<Usuario> buscarPorEmail(String email) {
-        return lista.stream()
+        return storage.values().stream()
                 .filter(u -> Objects.equals(u.getEmail(), email))
                 .findFirst();
     }
@@ -38,17 +36,17 @@ public class ClienteRepositoryMemoria implements ClienteRepository {
      */
     @Override
     public List<Usuario> listarTodos() {
-        return Collections.unmodifiableList(lista);
+        return Collections.unmodifiableList(new ArrayList<>(storage.values()));
     }
 
     @Override
-    public void deletar(Long id) {
-        // UUID-based repo — deleção por Long não aplicável nesta implementação
+    public void deletar(String id) {
+        storage.remove(id);
     }
 
     @Override
     public Usuario buscarPorEmailSenha(String email, String senhaHash) {
-        return lista.stream()
+        return storage.values().stream()
                 .filter(u -> Objects.equals(u.getEmail(), email) && u.verificarSenha(senhaHash))
                 .findFirst()
                 .orElse(null);

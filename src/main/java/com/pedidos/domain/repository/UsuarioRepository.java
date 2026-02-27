@@ -8,11 +8,11 @@ public interface UsuarioRepository {
 
     void salvar(Usuario usuario);
 
-    Optional<Usuario> buscarPorId(Long id);
+    Optional<Usuario> buscarPorId(String id);
 
     Optional<Usuario> buscarPorEmail(String email);
 
     List<Usuario> listarTodos();
 
-    void deletar(Long id);
+    void deletar(String id);
 }
