@@ -11,7 +11,7 @@ public class RestauranteRepositoryMemoria implements RestauranteRepository {
 
     @Override
     public void salvar(Usuario usuario) {
-        storage.put(usuario.getUuid().toString(), usuario);
+        storage.put(usuario.getId().toString(), usuario);
     }
 
     @Override

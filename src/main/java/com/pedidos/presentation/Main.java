@@ -1,5 +1,6 @@
 package com.pedidos.presentation;
 
+import com.pedidos.application.service.AdminService;
 import com.pedidos.application.service.AutenticacaoService;
 import com.pedidos.infra.repository.impl.AdminRepositoryMemoria;
 import com.pedidos.infra.repository.impl.ClienteRepositoryMemoria;
@@ -14,10 +15,10 @@ public class Main {
         ClienteRepositoryMemoria clienteRepo = new ClienteRepositoryMemoria();
 
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
+        AdminService adminService = new AdminService(adminRepo, authService);
 
         new DataSeeder(adminRepo, clienteRepo, restauranteRepo, authService).popular();
-        new MenuLogin(authService).iniciar();
+
+        new MenuLogin(authService, adminService).iniciar();
     }
 }
-
-

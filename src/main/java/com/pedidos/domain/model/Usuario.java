@@ -20,7 +20,9 @@ public abstract class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public String getUuid() {
+    public abstract void exibirDetalhes();
+
+    public String getId() {
         return id;
     }
 
@@ -29,13 +31,10 @@ public abstract class Usuario {
     }
 
     public void setNome(String nome) {
-        String regexLetras = "^[A-Za-zÀ-ÖØ-öø-ÿ\\s]+$";
-        if (nome != null && nome.matches(regexLetras)) {
-            this.nome = nome.trim();
-        } else {
-            System.err.println("Nome inválido! Utilize apenas letras.");
+        if (nome == null || !nome.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s]+$")) {
+            throw new IllegalArgumentException("Nome inválido! Utilize apenas letras.");
         }
-
+        this.nome = nome.trim();
     }
 
     public String getEmail() {
@@ -43,26 +42,21 @@ public abstract class Usuario {
     }
 
     public void setEmail(String email) {
-        String validarFormatoEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        if (email != null && email.matches(validarFormatoEmail)) {
-            this.email = email.toLowerCase().trim();
-        } else {
-            System.err.println("Email inválido.");
+        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            throw new IllegalArgumentException("E-mail inválido.");
         }
-
+        this.email = email.toLowerCase().trim();
     }
 
     public String getSenhaHash() {
         return this.senhaHash;
     }
 
-    public void setSenhaHash(String senha) {
-        String regexSenha = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!*])(?=\\S+$).{8,}$";
-        if (senha != null && senha.matches(regexSenha)) {
-            this.senhaHash = senha;
-        } else {
-            System.err.println("A senha deve ter 8+ caracteres, incluindo maiúscula, número e símbolo.");
+    public void setSenhaHash(String senhaHash) {
+        if (senhaHash == null || senhaHash.isBlank()) {
+            throw new IllegalArgumentException("Hash de senha inválido.");
         }
+        this.senhaHash = senhaHash;
     }
 
     public TipoUsuario getTipoUsuario() { return tipoUsuario; }

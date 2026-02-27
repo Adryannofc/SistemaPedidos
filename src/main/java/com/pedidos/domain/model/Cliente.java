@@ -32,6 +32,10 @@ public class Cliente extends Usuario {
 
     }
 
+    public void exibirDetalhes(){
+
+    }
+
     public String getTelefone() {
         return telefone;
     }

@@ -40,6 +40,10 @@ public class Restaurante extends Usuario {
         }
     }
 
+    public void exibirDetalhes() {
+
+    }
+
     public int getCategoriaGlobalId() {
         return categoriaGlobalId;
     }
