@@ -4,7 +4,8 @@ import com.pedidos.domain.model.Usuario;
 import com.pedidos.domain.repository.RestauranteRepository;
 
 import java.util.*;
-
+import com.pedidos.domain.model.Restaurante;
+import java.util.stream.Collectors;
 public class RestauranteRepositoryMemoria implements RestauranteRepository {
 
     private final HashMap<String, Usuario> storage = new HashMap<>();
@@ -42,6 +43,14 @@ public class RestauranteRepositoryMemoria implements RestauranteRepository {
                 .filter(u -> Objects.equals(u.getEmail(), email) && u.verificarSenha(senhaHash))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<Restaurante> listarRestaurantes() {
+        return storage.values().stream()
+                .filter(u -> u instanceof Restaurante)
+                .map(u -> (Restaurante) u)
+                .collect(Collectors.toList());
     }
 }
 

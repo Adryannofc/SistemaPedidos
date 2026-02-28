@@ -15,7 +15,7 @@ public class Main {
         ClienteRepositoryMemoria clienteRepo = new ClienteRepositoryMemoria();
 
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
-        AdminService adminService = new AdminService(adminRepo, authService);
+        AdminService adminService = new AdminService(adminRepo, authService, restauranteRepo);
 
         new DataSeeder(adminRepo, clienteRepo, restauranteRepo, authService).popular();
 
