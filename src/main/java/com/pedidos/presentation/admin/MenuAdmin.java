@@ -3,16 +3,19 @@ import com.pedidos.application.service.AdminService;
 import com.pedidos.domain.model.Admin;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
+import com.pedidos.presentation.admin.MenuCategorias;
 
 import java.util.Scanner;
 
 public class MenuAdmin {
     private final AdminService adminService;
     private final Scanner scanner;
+    private final MenuCategorias menuCategorias;
 
-    public MenuAdmin(AdminService adminService, Scanner scanner){
+    public MenuAdmin(AdminService adminService, Scanner scanner, MenuCategorias menuCategorias){
         this.adminService = adminService;
         this.scanner = scanner;
+        this.menuCategorias = menuCategorias;
 
 
     }
@@ -38,7 +41,7 @@ public class MenuAdmin {
             switch (opcao) {
                 case 1:
                     try {
-                        // Listar Restaurantes
+                        //  TODO: Listar Restaurantes
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -47,7 +50,7 @@ public class MenuAdmin {
 
                 case 2:
                     try {
-                        // Aprovar Restaurante
+                        //TODO: Aprovar Restaurante
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -56,7 +59,7 @@ public class MenuAdmin {
 
                 case 3:
                     try {
-                        // Bloquear Restaurante
+                        //TODO:Bloquear Restaurante
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -65,7 +68,7 @@ public class MenuAdmin {
 
                 case 4:
                     try {
-                        // Remover Restaurante
+                        // TODO:Remover Restaurante
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -74,7 +77,8 @@ public class MenuAdmin {
 
                 case 5:
                     try {
-                        // Gerenciar Categorias Globais
+                        //TODO: Gerenciar Categorias Globais
+                        menuCategorias.exibir();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -83,7 +87,7 @@ public class MenuAdmin {
 
                 case 6:
                     try {
-                        // Alterar Senha
+                        //TODO: Alterar Senha
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -92,7 +96,7 @@ public class MenuAdmin {
 
                 case 7:
                     try {
-                        // Visualizar Perfil
+                        //TODO: Visualizar Perfil
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -106,11 +110,6 @@ public class MenuAdmin {
                     System.out.println("Opção inválida. Tente novamente.");
                     TerminalUtils.pausar();
             }
-
-
         }
-
     }
-
-
 }
