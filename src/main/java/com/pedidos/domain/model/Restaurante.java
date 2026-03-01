@@ -9,7 +9,7 @@ public class Restaurante extends Usuario {
 
     private String cnpj;
     private boolean statusAtivo;
-    private int categoriaGlobalId;
+    private String categoriaGlobalId;
     private String telefone;
 
     public Restaurante(String nome, String email, String senhaHash,String cnpj) {
@@ -54,18 +54,12 @@ public class Restaurante extends Usuario {
 
     }
 
-    public int getCategoriaGlobalId() {
+    public String getCategoriaGlobalId() {
         return categoriaGlobalId;
     }
 
-    public void setCategoriaGlobalId(int categoriaGlobalId) {
-        if (categoriaGlobalId <= 0)
-        {
-            throw new IllegalArgumentException("O ID da categoria deve ser um número positivo.");
-        }
-        else {
-            this.categoriaGlobalId = categoriaGlobalId;
-        }
+    public void setCategoriaGlobalId(String categoriaGlobalId) {
+        this.categoriaGlobalId = categoriaGlobalId;
     }
 
     public String getTelefone() {
