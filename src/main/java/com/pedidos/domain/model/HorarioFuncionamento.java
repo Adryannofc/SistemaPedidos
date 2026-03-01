@@ -3,17 +3,20 @@ package com.pedidos.domain.model;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 public class HorarioFuncionamento {
 
     private DayOfWeek diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
+    private UUID id = UUID.randomUUID();
 
-    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim) {
+    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, UUID id) {
         this.horaFim = horaFim;
         this.horaInicio = horaInicio;
         this.diaSemana = diaSemana;
+        this.id = id;
     }
 
     public DayOfWeek getDiaSemana() {
@@ -46,4 +49,13 @@ public class HorarioFuncionamento {
                     !dataHora.toLocalTime().isAfter(horaFim);
         }
 
+    @Override
+    public String toString() {
+        return "HorarioFuncionamento{" +
+                "diaSemana=" + diaSemana +
+                ", horaInicio=" + horaInicio +
+                ", horaFim=" + horaFim +
+                '}';
     }
+}
+

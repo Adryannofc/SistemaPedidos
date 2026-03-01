@@ -15,8 +15,14 @@ public class Admin extends Usuario {
 
     @Override
     public void exibirDetalhes() {
-        TerminalUtils.cabecalho("ADMINISTRADOR ");
+        TerminalUtils.cabecalho("PAINEL DO ADMINISTRADOR ");
+        System.out.println("Id :" + getId());
         System.out.println("Nome  : " + getNome());
         System.out.println("E-mail: " + getEmail());
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{nome=" + getNome() + ", email=" + getEmail() + "}";
     }
 }

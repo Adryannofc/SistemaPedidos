@@ -64,4 +64,13 @@ public abstract class Usuario {
     public boolean verificarSenha(String senhaHash) {
         return this.senhaHash.equals(senhaHash);
     }
+
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }

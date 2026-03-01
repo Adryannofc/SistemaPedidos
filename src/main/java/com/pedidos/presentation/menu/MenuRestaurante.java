@@ -7,7 +7,8 @@ import com.pedidos.presentation.util.TerminalUtils;
 import java.util.Scanner;
 
 public class MenuRestaurante {
-    public static Scanner scn = new Scanner(System.in);
+
+    static Scanner scn = new Scanner(System.in);
     private final Usuario usuario;
 
     public MenuRestaurante(Usuario usuario) {

@@ -5,19 +5,19 @@ import java.util.UUID;
 
 public class ItemPedido {
 
-    private UUID produtoId;
+    private String produtoId;
     private String nomeProduto;
     private int quantidade;
     private BigDecimal precoUnitario;
 
-    public ItemPedido(UUID produtoId, String nomeProduto, int quantidade, BigDecimal precoUnitario) {
+    public ItemPedido(String produtoId, String nomeProduto, int quantidade, BigDecimal precoUnitario) {
         this.produtoId = produtoId;
         this.nomeProduto = nomeProduto;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
     }
 
-    public UUID getProdutoId() {
+    public String getProdutoId() {
         return produtoId;
     }
 
@@ -37,4 +37,13 @@ public class ItemPedido {
         return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
     }
 
+    @Override
+    public String toString() {
+        return "ItemPedido{" +
+                "produtoId='" + produtoId + '\'' +
+                ", nomeProduto='" + nomeProduto + '\'' +
+                ", quantidade=" + quantidade +
+                ", precoUnitario=" + precoUnitario +
+                '}';
+    }
 }
