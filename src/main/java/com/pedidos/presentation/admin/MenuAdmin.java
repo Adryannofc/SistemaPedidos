@@ -1,10 +1,12 @@
 package com.pedidos.presentation.admin;
+
 import com.pedidos.application.service.AdminService;
 import com.pedidos.domain.model.Admin;
+import com.pedidos.domain.model.Restaurante;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
-import com.pedidos.presentation.admin.MenuCategorias;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuAdmin {
@@ -12,17 +14,15 @@ public class MenuAdmin {
     private final Scanner scanner;
     private final MenuCategorias menuCategorias;
 
-    public MenuAdmin(AdminService adminService, Scanner scanner, MenuCategorias menuCategorias){
+    public MenuAdmin(AdminService adminService, Scanner scanner, MenuCategorias menuCategorias) {
         this.adminService = adminService;
         this.scanner = scanner;
         this.menuCategorias = menuCategorias;
-
-
     }
 
-    public void exibir(Admin adminLogado){
+    public void exibir(Admin adminLogado) {
 
-        while (true){
+        while (true) {
             TerminalUtils.limparTela();
             TerminalUtils.cabecalho(adminLogado.getNome());
             System.out.println("1 - Listar Restaurantes");
@@ -36,12 +36,19 @@ public class MenuAdmin {
             System.out.println();
             System.out.print("Escolha uma opção: ");
 
-            int opcao = EntradaSegura.lerOpcao(scanner,0,7);
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 7);
 
             switch (opcao) {
                 case 1:
                     try {
-                        //  TODO: Listar Restaurantes
+                        List<Restaurante> restaurantes = adminService.listarRestaurantes();
+                        if (restaurantes.isEmpty()) {
+                            System.out.println("Nenhum restaurante cadastrado.");
+                        } else {
+                            for (Restaurante r : restaurantes) {
+                                System.out.println("ID: " + r.getId() + " | Nome: " + r.getNome() + " | Ativo: " + r.isStatusAtivo());
+                            }
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -50,7 +57,10 @@ public class MenuAdmin {
 
                 case 2:
                     try {
-                        //TODO: Aprovar Restaurante
+                        System.out.print("Digite o ID do restaurante: ");
+                        String id = scanner.nextLine();
+                        adminService.aprovarRestaurante(id);
+                        System.out.println("Restaurante aprovado com sucesso!");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -59,7 +69,10 @@ public class MenuAdmin {
 
                 case 3:
                     try {
-                        //TODO:Bloquear Restaurante
+                        System.out.print("Digite o ID do restaurante: ");
+                        String id = scanner.nextLine();
+                        adminService.bloquearRestaurante(id);
+                        System.out.println("Restaurante bloqueado com sucesso!");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -68,7 +81,10 @@ public class MenuAdmin {
 
                 case 4:
                     try {
-                        // TODO:Remover Restaurante
+                        System.out.print("Digite o ID do restaurante: ");
+                        String id = scanner.nextLine();
+                        adminService.removerRestaurante(id);
+                        System.out.println("Restaurante removido com sucesso!");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -77,7 +93,6 @@ public class MenuAdmin {
 
                 case 5:
                     try {
-                        //TODO: Gerenciar Categorias Globais
                         menuCategorias.exibir();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -87,7 +102,13 @@ public class MenuAdmin {
 
                 case 6:
                     try {
-                        //TODO: Alterar Senha
+                        System.out.print("Senha atual: ");
+                        String senhaAtual = scanner.nextLine();
+                        System.out.print("Nova senha: ");
+                        String novaSenha = scanner.nextLine();
+                        System.out.print("Confirmar nova senha: ");
+                        String confirmacao = scanner.nextLine();
+                        adminService.alterarSenha(adminLogado, senhaAtual, novaSenha, confirmacao);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -96,7 +117,7 @@ public class MenuAdmin {
 
                 case 7:
                     try {
-                        //TODO: Visualizar Perfil
+                        adminService.visualizarPerfil(adminLogado);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
