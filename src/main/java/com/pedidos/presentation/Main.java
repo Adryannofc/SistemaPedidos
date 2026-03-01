@@ -23,6 +23,6 @@ public class Main {
 
         new DataSeeder(adminRepo, clienteRepo, restauranteRepo, authService).popular();
 
-        new MenuLogin(authService, adminService, categoriaService).iniciar();
+        new MenuLogin(authService, adminService).iniciar();
     }
 }
