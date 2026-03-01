@@ -1,23 +1,28 @@
 package com.pedidos.presentation.admin;
+
 import com.pedidos.application.service.AdminService;
+import com.pedidos.application.service.CategoriaService;
+import com.pedidos.domain.model.CategoriaGlobal;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuCategorias {
     private final AdminService adminService;
+    private final CategoriaService categoriaService;
     private final Scanner scanner;
 
-    public MenuCategorias(AdminService adminService, Scanner scanner){
+    public MenuCategorias(AdminService adminService, CategoriaService categoriaService, Scanner scanner) {
         this.adminService = adminService;
+        this.categoriaService = categoriaService;
         this.scanner = scanner;
-
     }
 
-    public void exibir(){
+    public void exibir() {
 
-        while (true){
+        while (true) {
             TerminalUtils.limparTela();
             TerminalUtils.cabecalho("CATEGORIAS GLOBAIS");
             System.out.println("1 - Listar todas as categorias");
@@ -28,13 +33,20 @@ public class MenuCategorias {
             System.out.println();
             System.out.print("Escolha uma opção: ");
 
-            int opcao = EntradaSegura.lerOpcao(scanner,0,4);
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 4);
 
             switch (opcao) {
                 case 1:
                     try {
-                        // TODO: Listar todas as categorias
-                        System.out.println("Em construção...");
+                        List<CategoriaGlobal> categorias = categoriaService.listarCategoriasGlobais();
+                        if (categorias.isEmpty()) {
+                            System.out.println("Nenhuma categoria cadastrada.");
+                        } else {
+                            for (int i = 0; i < categorias.size(); i++) {
+                                CategoriaGlobal c = categorias.get(i);
+                                System.out.println((i + 1) + " - " + c.getNome() + " | ID: " + c.getId());
+                            }
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -43,8 +55,17 @@ public class MenuCategorias {
 
                 case 2:
                     try {
-                        // TODO: Adicionar nova categoria
-                        System.out.println("Em construção...");
+                        System.out.print("Nome da categoria: ");
+                        String nome = scanner.nextLine();
+                        System.out.print("Descrição: ");
+                        String descricao = scanner.nextLine();
+
+                        if (nome.isBlank()) {
+                            System.out.println("O nome não pode ser vazio.");
+                        } else {
+                            categoriaService.criarCategoriaGlobal(nome, descricao);
+                            System.out.println("Categoria " + nome + " criada com sucesso.");
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -53,8 +74,26 @@ public class MenuCategorias {
 
                 case 3:
                     try {
-                        // TODO: Editar categoria
-                        System.out.println("Em construção...");
+                        List<CategoriaGlobal> categorias = categoriaService.listarCategoriasGlobais();
+                        if (categorias.isEmpty()) {
+                            System.out.println("Nenhuma categoria cadastrada.");
+                        } else {
+                            for (int i = 0; i < categorias.size(); i++) {
+                                CategoriaGlobal c = categorias.get(i);
+                                System.out.println((i + 1) + " - " + c.getNome() + " | ID: " + c.getId());
+                            }
+                            System.out.print("Digite o número da categoria: ");
+                            int numero = EntradaSegura.lerOpcao(scanner, 1, categorias.size());
+                            CategoriaGlobal selecionada = categorias.get(numero - 1);
+
+                            System.out.print("Novo nome: ");
+                            String novoNome = scanner.nextLine();
+                            System.out.print("Nova descrição: ");
+                            String novaDescricao = scanner.nextLine();
+
+                            categoriaService.editarCategoriaGlobal(selecionada.getId(), novoNome, novaDescricao);
+                            System.out.println("Categoria atualizada com sucesso.");
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -63,10 +102,33 @@ public class MenuCategorias {
 
                 case 4:
                     try {
-                        // TODO: Remover categoria
-                        System.out.println("Em construção...");
+                        List<CategoriaGlobal> categorias = categoriaService.listarCategoriasGlobais();
+                        if (categorias.isEmpty()) {
+                            System.out.println("Nenhuma categoria cadastrada.");
+                        } else {
+                            for (int i = 0; i < categorias.size(); i++) {
+                                CategoriaGlobal c = categorias.get(i);
+                                System.out.println((i + 1) + " - " + c.getNome() + " | ID: " + c.getId());
+                            }
+                            System.out.print("Digite o número da categoria: ");
+                            int numero = EntradaSegura.lerOpcao(scanner, 1, categorias.size());
+                            CategoriaGlobal selecionada = categorias.get(numero - 1);
+
+                            System.out.print("Tem certeza? (S/N): ");
+                            String confirmacao = scanner.nextLine();
+                            if (confirmacao.equalsIgnoreCase("S")) {
+                                categoriaService.removerCategoriaGlobal(selecionada.getId());
+                                System.out.println("Categoria removida com sucesso.");
+                            } else {
+                                System.out.println("Operação cancelada.");
+                            }
+                        }
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        if (e.getMessage().contains("em uso")) {
+                            System.out.println("Não é possível remover: categoria vinculada a restaurante(s).");
+                        } else {
+                            System.out.println(e.getMessage());
+                        }
                     }
                     TerminalUtils.pausar();
                     break;
