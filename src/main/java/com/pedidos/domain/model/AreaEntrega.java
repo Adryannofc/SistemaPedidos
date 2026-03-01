@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 public class AreaEntrega {
 
         private String bairro;
-        private double distanciaKm;
+        private BigDecimal distanciaKm;
         private BigDecimal taxaEntrega;
         private int previsaoMinutos;
 
-        public AreaEntrega(String bairro, double distanciaKm, BigDecimal taxaEntrega, int previsaoMinutos) {
+        public AreaEntrega(String bairro, BigDecimal distanciaKm, BigDecimal taxaEntrega, int previsaoMinutos) {
             this.bairro = bairro;
             this.distanciaKm = distanciaKm;
             this.taxaEntrega = taxaEntrega;
@@ -24,11 +24,11 @@ public class AreaEntrega {
         this.bairro = bairro;
     }
 
-    public double getDistanciaKm() {
+    public BigDecimal getDistanciaKm() {
         return distanciaKm;
     }
 
-    public void setDistanciaKm(double distanciaKm) {
+    public void setDistanciaKm(BigDecimal distanciaKm) {
         this.distanciaKm = distanciaKm;
     }
 
@@ -46,5 +46,15 @@ public class AreaEntrega {
 
     public void setPrevisaoMinutos(int previsaoMinutos) {
         this.previsaoMinutos = previsaoMinutos;
+    }
+
+    @Override
+    public String toString() {
+        return "AreaEntrega{" +
+                "bairro='" + bairro + '\'' +
+                ", distanciaKm=" + distanciaKm +
+                ", taxaEntrega=" + taxaEntrega +
+                ", previsaoMinutos=" + previsaoMinutos +
+                '}';
     }
 }

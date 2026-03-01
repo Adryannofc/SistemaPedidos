@@ -6,10 +6,10 @@ import com.pedidos.presentation.util.TerminalUtils;
 import java.util.Scanner;
 
 public class MenuCliente {
-    public static Scanner scn = new Scanner(System.in);
+    Scanner scn = new Scanner(System.in);
     private final Usuario usuario;
 
-    public MenuCliente(Usuario usuario) {
+    public MenuCliente(Usuario usuario){
         this.usuario = usuario;
     }
 
