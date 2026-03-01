@@ -1,6 +1,7 @@
 package com.pedidos.presentation;
 
 import com.pedidos.application.service.AdminService;
+import com.pedidos.application.service.AreaEntregaService;
 import com.pedidos.application.service.AutenticacaoService;
 import com.pedidos.application.service.CategoriaService;
 import com.pedidos.infra.repository.impl.*;
@@ -16,6 +17,7 @@ public class Main {
         CategoriaGlobalRepositoryMemoria categoriaGlobalRepo     = new CategoriaGlobalRepositoryMemoria();
         CategoriaCardapioRepositoryMemoria categoriaCardapioRepo = new CategoriaCardapioRepositoryMemoria();
         ProdutoRepositoryMemoria produtoRepo        = new ProdutoRepositoryMemoria();
+        AreaEntregaRepositoryMemoria areaEntregaRepo = new AreaEntregaRepositoryMemoria();
 
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
         AdminService adminService = new AdminService(adminRepo, authService, restauranteRepo);

@@ -43,6 +43,10 @@ public class Produto {
         return categoriaCardapioId;
     }
 
+    public void setCategoriaCardapioId(String categoriaCardapioId) {
+        this.categoriaCardapioId = categoriaCardapioId;
+    }
+
     public String getRestauranteId() {
         return restauranteId;
     }
