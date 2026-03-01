@@ -22,7 +22,6 @@ public class Main {
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
         AdminService adminService = new AdminService(adminRepo, authService, restauranteRepo);
         CategoriaService categoriaService   = new CategoriaService(categoriaGlobalRepo, categoriaCardapioRepo, restauranteRepo, produtoRepo);
-        AreaEntregaService areaEntregaService = new AreaEntregaService(areaEntregaRepo);
 
         new DataSeeder(adminRepo, clienteRepo, restauranteRepo, authService).popular();
 
