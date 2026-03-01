@@ -4,14 +4,18 @@ import com.pedidos.domain.model.Endereco;
 import java.util.List;
 import java.util.Optional;
 
-public interface EnderecoRepository{
+public interface EnderecoRepository {
 
     void salvar(Endereco endereco);
 
-    Optional<Endereco> buscarPorId(Long id);
+    Optional<Endereco> buscarPorId(String id);
+
+    List<Endereco> buscarPorClienteId(String clienteId);
+
+    Optional<Endereco> buscarPadraoDoCliente(String clienteId);
 
     List<Endereco> listarTodos();
 
-    void deletar(Long id);
+    void deletar(String id);
 
 }
