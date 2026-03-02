@@ -10,9 +10,9 @@ public class HorarioFuncionamento {
     private DayOfWeek diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
-    private UUID id = UUID.randomUUID();
+    private String id = UUID.randomUUID().toString();
 
-    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, UUID id) {
+    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, String id) {
         this.horaFim = horaFim;
         this.horaInicio = horaInicio;
         this.diaSemana = diaSemana;
