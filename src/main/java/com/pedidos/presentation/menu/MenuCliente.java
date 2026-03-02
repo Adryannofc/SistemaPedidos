@@ -1,5 +1,6 @@
 package com.pedidos.presentation.menu;
 
+import com.pedidos.application.service.ClienteService;
 import com.pedidos.domain.model.Usuario;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
@@ -8,9 +9,10 @@ import java.util.Scanner;
 public class MenuCliente {
     Scanner scn = new Scanner(System.in);
     private final Usuario usuario;
-
-    public MenuCliente(Usuario usuario){
+    private final ClienteService clienteService;
+    public MenuCliente(Usuario usuario, ClienteService clienteService){
         this.usuario = usuario;
+        this.clienteService = clienteService;
     }
 
     public void iniciar(){
