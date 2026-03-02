@@ -19,6 +19,8 @@ public class HorarioFuncionamento {
         this.id = id;
     }
 
+    public UUID getId() {return id;}
+
     public DayOfWeek getDiaSemana() {
         return diaSemana;
     }
