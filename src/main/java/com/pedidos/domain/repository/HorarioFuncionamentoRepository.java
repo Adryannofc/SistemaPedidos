@@ -12,5 +12,7 @@ public interface HorarioFuncionamentoRepository {
 
     List<HorarioFuncionamento> listarTodos();
 
+    List<HorarioFuncionamento> buscarPorRestauranteId(String restauranteId);
+
     void deletar(String id);
 }
