@@ -7,19 +7,38 @@ import java.util.UUID;
 
 public class HorarioFuncionamento {
 
+    private String restauranteId;
     private DayOfWeek diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
     private String id = UUID.randomUUID().toString();
 
-    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, String id) {
+    public HorarioFuncionamento(String restauranteId, DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim) {
+        this.restauranteId = restauranteId;
+        this.horaFim = horaFim;
+        this.horaInicio = horaInicio;
+        this.diaSemana = diaSemana;
+        this.id = UUID.randomUUID();
+    }
+
+    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, UUID id) {
         this.horaFim = horaFim;
         this.horaInicio = horaInicio;
         this.diaSemana = diaSemana;
         this.id = id;
     }
 
-    public UUID getId() {return id;}
+    public String getRestauranteId() {
+        return restauranteId;
+    }
+
+    public void setRestauranteId(String restauranteId) {
+        this.restauranteId = restauranteId;
+    }
+
+    public UUID getId() {
+        return id;
+    }
 
     public DayOfWeek getDiaSemana() {
         return diaSemana;

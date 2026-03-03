@@ -3,18 +3,22 @@ package com.pedidos.domain.model;
 import com.pedidos.domain.enums.TipoUsuario;
 import com.pedidos.presentation.util.TerminalUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class Cliente extends Usuario {
 
     private String cpf;
     private String telefone;
+    private List<String> favoritos;
 
     public Cliente(String nome, String email, String senhaHash, String cpf, String telefone) {
         super(nome, email, senhaHash, TipoUsuario.CLIENTE);
         this.cpf = cpf;
         this.telefone = telefone;
-
+        this.favoritos = new ArrayList<>();
     }
 
     public String getCpf() {
@@ -62,5 +66,19 @@ public class Cliente extends Usuario {
     @Override
     public String toString() {
         return "Cliente{nome=" + getNome() + ", email=" + getEmail() + "}";
+    }
+
+    public void adicionarFavorito(String restauranteId) {
+        if (!this.favoritos.contains(restauranteId)) {
+            this.favoritos.add(restauranteId);
+        }
+    }
+
+    public void removerFavorito(String restauranteId) {
+        this.favoritos.remove(restauranteId);
+    }
+
+    public List<String> getFavoritos() {
+        return new ArrayList<>(this.favoritos);
     }
 }
