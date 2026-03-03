@@ -11,7 +11,7 @@ public class HorarioFuncionamento {
     private DayOfWeek diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
-    private UUID id = UUID.randomUUID();
+    private String id = UUID.randomUUID().toString();
 
     public HorarioFuncionamento(String restauranteId, DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim) {
         this.restauranteId = restauranteId;
