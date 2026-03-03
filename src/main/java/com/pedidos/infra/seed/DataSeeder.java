@@ -83,13 +83,13 @@ public class DataSeeder {
         // ========== HORÁRIOS DE FUNCIONAMENTO - RESTAURANTE 1 ==========
         // Segunda a sexta: 11h às 23h
         for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(dia, LocalTime.of(11, 0), LocalTime.of(23, 0), UUID.randomUUID());
+            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante1.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
             horarioFuncionamentoRepository.salvar(horario);
         }
 
         // Sábado e domingo: 12h à 00h
         for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.SATURDAY, DayOfWeek.SUNDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(dia, LocalTime.of(12, 0), LocalTime.of(0, 0), UUID.randomUUID());
+            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante1.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
             horarioFuncionamentoRepository.salvar(horario);
         }
 
@@ -135,7 +135,7 @@ public class DataSeeder {
         // ========== HORÁRIOS DE FUNCIONAMENTO - RESTAURANTE 2 ==========
         // Terça a domingo: 18h às 23h30
         for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(dia, LocalTime.of(18, 0), LocalTime.of(23, 30), UUID.randomUUID());
+            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante1.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
             horarioFuncionamentoRepository.salvar(horario);
         }
 

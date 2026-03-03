@@ -49,8 +49,7 @@ public class HorarioService {
             throw new IllegalStateException("Já existe horário cadastrado para este dia da semana");
         }
 
-        HorarioFuncionamento horario =
-                new HorarioFuncionamento(diaSemana, horaFim, horaInicio, restauranteId);
+        HorarioFuncionamento horario = new HorarioFuncionamento(restauranteId, diaSemana, horaInicio, horaFim);
 
         horarioRepository.salvar(horario);
 
