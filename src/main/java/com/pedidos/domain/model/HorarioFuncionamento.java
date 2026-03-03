@@ -11,21 +11,14 @@ public class HorarioFuncionamento {
     private DayOfWeek diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
-    private String id = UUID.randomUUID().toString();
+    private String id;
 
     public HorarioFuncionamento(String restauranteId, DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim) {
         this.restauranteId = restauranteId;
         this.horaFim = horaFim;
         this.horaInicio = horaInicio;
         this.diaSemana = diaSemana;
-        this.id = UUID.randomUUID();
-    }
-
-    public HorarioFuncionamento(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFim, UUID id) {
-        this.horaFim = horaFim;
-        this.horaInicio = horaInicio;
-        this.diaSemana = diaSemana;
-        this.id = id;
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getRestauranteId() {
@@ -36,7 +29,7 @@ public class HorarioFuncionamento {
         this.restauranteId = restauranteId;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
