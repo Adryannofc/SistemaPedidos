@@ -21,6 +21,10 @@ public class RestauranteService {
         this.autenticacaoService = autenticacaoService;
     }
 
+    public void visualizarPerfil(Restaurante restaurante) {
+        restaurante.exibirDetalhes();
+    }
+
     public void editarPerfil(Restaurante restaurante,
                              String novoNome,
                              String novoCnpj,
@@ -42,7 +46,6 @@ public class RestauranteService {
                 .filter(u -> u instanceof Restaurante)
                 .map(u -> (Restaurante) u)
                 .anyMatch(r -> r.getCnpj().equals(cnpjNormalizado));
-
 
         if (cnpjExiste) {
             throw new IllegalStateException("CNPJ já cadastrado no sistema");
@@ -66,7 +69,6 @@ public class RestauranteService {
                 .stream()
                 .filter(u -> !u.getId().equals(restaurante.getId()))
                 .anyMatch(u -> u.getEmail().equalsIgnoreCase(novoEmail));
-
 
         if (emailExiste) {
             throw new IllegalStateException("Email já cadastrado");
@@ -97,7 +99,6 @@ public class RestauranteService {
         restaurante.setCategoriaGlobalId(novaCategoriaGlobalId);
 
         usuarioRepository.salvar(restaurante);
-
     }
 
     public void alterarSenha(Restaurante restaurante,
@@ -107,7 +108,7 @@ public class RestauranteService {
         String senhaAtualHash = autenticacaoService.hashSenha(senhaAtual);
 
         if (!senhaAtualHash.equals(restaurante.getSenhaHash())) {
-        throw new IllegalArgumentException("Senha incorreta");
+            throw new IllegalArgumentException("Senha incorreta");
         }
 
         if (novaSenha == null || novaSenha.length() < 6) {
@@ -122,7 +123,6 @@ public class RestauranteService {
 
         restaurante.setSenhaHash(novoHash);
         usuarioRepository.salvar(restaurante);
-
     }
 
     public Restaurante buscarRestaurantePorId(String id) {
@@ -135,7 +135,6 @@ public class RestauranteService {
         }
 
         return (Restaurante) usuario;
-
     }
 
     private String normalizarCnpj(String cnpj) {
@@ -152,7 +151,5 @@ public class RestauranteService {
         }
 
         return cnpjNormalizado;
-
     }
-
 }
