@@ -8,7 +8,6 @@ import com.pedidos.presentation.util.TerminalUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,7 +29,8 @@ public class MenuHorarios {
             System.out.println("3 - Editar Horário");
             System.out.println("4 - Remover Horário");
             System.out.println("0 - Voltar");
-            System.out.print("\nEscolha uma opção: ");
+            System.out.println();
+            System.out.print("Escolha uma opção: ");
 
             int opcao = EntradaSegura.lerOpcao(scanner, 0, 4);
 
@@ -43,46 +43,60 @@ public class MenuHorarios {
                         } else {
                             for (int i = 0; i < horarios.size(); i++) {
                                 HorarioFuncionamento h = horarios.get(i);
-                                System.out.println((i + 1) + " - " + h.getDiaSemana()
-                                        + " | " + h.getHoraInicio() + " às " + h.getHoraFim()
-                                        + " | ID: " + h.getId());
+                                System.out.println((i + 1) + " - " + traduzirDia(h.getDiaSemana())
+                                        + " | " + h.getHoraInicio().toString()
+                                        + " às " + h.getHoraFim().toString());
                             }
                         }
                     } catch (Exception e) {
-                        System.out.println("Erro: " + e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
 
                 case 2:
                     try {
-                        List<DayOfWeek> disponiveis = horarioService.listarDiasDisponiveis(restauranteLogado.getId());
-                        if (disponiveis.isEmpty()) {
-                            System.out.println("Todos os dias já estão cadastrados.");
+                        List<DayOfWeek> diasDisponiveis = horarioService.listarDiasDisponiveis(restauranteLogado.getId());
+                        if (diasDisponiveis.isEmpty()) {
+                            System.out.println("Todos os dias da semana já estão cadastrados.");
                             TerminalUtils.pausar();
                             break;
                         }
 
                         System.out.println("Dias disponíveis:");
-                        for (int i = 0; i < disponiveis.size(); i++) {
-                            System.out.println((i + 1) + " - " + disponiveis.get(i));
+                        for (int i = 0; i < diasDisponiveis.size(); i++) {
+                            System.out.println((i + 1) + " - " + traduzirDia(diasDisponiveis.get(i)));
                         }
                         System.out.print("Escolha o número do dia: ");
-                        int numDia = EntradaSegura.lerOpcao(scanner, 1, disponiveis.size());
-                        DayOfWeek dia = disponiveis.get(numDia - 1);
+                        int numDia = EntradaSegura.lerOpcao(scanner, 1, diasDisponiveis.size());
+                        DayOfWeek diaSelecionado = diasDisponiveis.get(numDia - 1);
 
                         System.out.print("Hora de início (HH:mm): ");
-                        LocalTime inicio = LocalTime.parse(scanner.nextLine().trim());
+                        String inicioStr = scanner.nextLine();
+                        LocalTime horaInicio;
+                        try {
+                            horaInicio = LocalTime.parse(inicioStr);
+                        } catch (Exception e) {
+                            System.out.println("Formato inválido. Use HH:mm");
+                            TerminalUtils.pausar();
+                            break;
+                        }
 
                         System.out.print("Hora de fim (HH:mm): ");
-                        LocalTime fim = LocalTime.parse(scanner.nextLine().trim());
+                        String fimStr = scanner.nextLine();
+                        LocalTime horaFim;
+                        try {
+                            horaFim = LocalTime.parse(fimStr);
+                        } catch (Exception e) {
+                            System.out.println("Formato inválido. Use HH:mm");
+                            TerminalUtils.pausar();
+                            break;
+                        }
 
-                        horarioService.criarHorario(restauranteLogado.getId(), dia, inicio, fim);
+                        horarioService.criarHorario(restauranteLogado.getId(), diaSelecionado, horaInicio, horaFim);
                         System.out.println("Horário cadastrado com sucesso.");
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Formato inválido. Use HH:mm (ex: 18:00).");
                     } catch (Exception e) {
-                        System.out.println("Erro: " + e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
@@ -91,31 +105,49 @@ public class MenuHorarios {
                     try {
                         List<HorarioFuncionamento> horarios = horarioService.listarHorarioPorRestaurante(restauranteLogado.getId());
                         if (horarios.isEmpty()) {
-                            System.out.println("Nenhum horário cadastrado.");
+                            System.out.println("Nenhum horário para editar.");
                             TerminalUtils.pausar();
                             break;
                         }
+
                         for (int i = 0; i < horarios.size(); i++) {
                             HorarioFuncionamento h = horarios.get(i);
-                            System.out.println((i + 1) + " - " + h.getDiaSemana()
+                            System.out.println((i + 1) + " - " + traduzirDia(h.getDiaSemana())
                                     + " | " + h.getHoraInicio() + " às " + h.getHoraFim());
                         }
                         System.out.print("Escolha o número do horário: ");
                         int num = EntradaSegura.lerOpcao(scanner, 1, horarios.size());
                         HorarioFuncionamento selecionado = horarios.get(num - 1);
 
-                        System.out.print("Nova hora de início (" + selecionado.getHoraInicio() + "): ");
-                        LocalTime novoInicio = LocalTime.parse(scanner.nextLine().trim());
+                        System.out.println("⚠ Para alterar o dia, remova e cadastre novamente.");
+                        System.out.println("Horário atual: " + selecionado.getHoraInicio() + " às " + selecionado.getHoraFim());
 
-                        System.out.print("Nova hora de fim (" + selecionado.getHoraFim() + "): ");
-                        LocalTime novoFim = LocalTime.parse(scanner.nextLine().trim());
+                        System.out.print("Nova hora de início (HH:mm): ");
+                        String inicioStr = scanner.nextLine();
+                        LocalTime novaHoraInicio;
+                        try {
+                            novaHoraInicio = LocalTime.parse(inicioStr);
+                        } catch (Exception e) {
+                            System.out.println("Formato inválido. Use HH:mm");
+                            TerminalUtils.pausar();
+                            break;
+                        }
 
-                        horarioService.editarHorario(selecionado.getId(), novoInicio, novoFim);
+                        System.out.print("Nova hora de fim (HH:mm): ");
+                        String fimStr = scanner.nextLine();
+                        LocalTime novaHoraFim;
+                        try {
+                            novaHoraFim = LocalTime.parse(fimStr);
+                        } catch (Exception e) {
+                            System.out.println("Formato inválido. Use HH:mm");
+                            TerminalUtils.pausar();
+                            break;
+                        }
+
+                        horarioService.editarHorario(selecionado.getId(), novaHoraInicio, novaHoraFim);
                         System.out.println("Horário atualizado com sucesso.");
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Formato inválido. Use HH:mm (ex: 18:00).");
                     } catch (Exception e) {
-                        System.out.println("Erro: " + e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
@@ -128,31 +160,50 @@ public class MenuHorarios {
                             TerminalUtils.pausar();
                             break;
                         }
+
                         for (int i = 0; i < horarios.size(); i++) {
                             HorarioFuncionamento h = horarios.get(i);
-                            System.out.println((i + 1) + " - " + h.getDiaSemana()
+                            System.out.println((i + 1) + " - " + traduzirDia(h.getDiaSemana())
                                     + " | " + h.getHoraInicio() + " às " + h.getHoraFim());
                         }
                         System.out.print("Escolha o número do horário: ");
                         int num = EntradaSegura.lerOpcao(scanner, 1, horarios.size());
                         HorarioFuncionamento selecionado = horarios.get(num - 1);
 
-                        System.out.print("Tem certeza? (S/N): ");
-                        if (scanner.nextLine().equalsIgnoreCase("S")) {
+                        System.out.print("Tem certeza? O restaurante ficará fechado neste dia. (S/N): ");
+                        String confirmacao = scanner.nextLine();
+                        if (confirmacao.equalsIgnoreCase("S")) {
                             horarioService.removerHorario(selecionado.getId());
                             System.out.println("Horário removido com sucesso.");
                         } else {
                             System.out.println("Operação cancelada.");
                         }
                     } catch (Exception e) {
-                        System.out.println("Erro: " + e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
 
                 case 0:
                     return;
+
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    TerminalUtils.pausar();
             }
+        }
+    }
+
+    private String traduzirDia(DayOfWeek dia) {
+        switch (dia) {
+            case MONDAY:    return "Segunda-feira";
+            case TUESDAY:   return "Terça-feira";
+            case WEDNESDAY: return "Quarta-feira";
+            case THURSDAY:  return "Quinta-feira";
+            case FRIDAY:    return "Sexta-feira";
+            case SATURDAY:  return "Sábado";
+            case SUNDAY:    return "Domingo";
+            default:        return dia.toString();
         }
     }
 }

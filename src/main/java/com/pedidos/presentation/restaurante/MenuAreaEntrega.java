@@ -140,6 +140,9 @@ public class MenuAreaEntrega {
 
                 case 0:
                     return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    TerminalUtils.pausar();
             }
         }
     }

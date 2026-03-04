@@ -66,5 +66,11 @@ public class RestauranteQueryRepositoryMemoria implements RestauranteQueryReposi
                 .filter(Restaurante::isStatusAtivo)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean estaAberto(String restauranteId, LocalDateTime agora) {
+        return horarioRepository.buscarPorRestauranteId(restauranteId).stream()
+                .anyMatch(h -> h.estaAberto(agora));
+    }
 }
 
