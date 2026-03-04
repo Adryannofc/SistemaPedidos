@@ -7,7 +7,7 @@ public interface FavoritosRepository {
 
     void removerFavorito(String clienteId, String restauranteId);
 
-    List<String> listarPorCliente(String clienteId);
+    List<String> listarFavoritos(String clienteId);
 
     boolean isFavorito(String clienteId, String restauranteId);
 }

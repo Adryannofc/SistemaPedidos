@@ -13,5 +13,7 @@ public interface RestauranteQueryRepository {
     List<Restaurante> listarAtivosPorCategoria(String categoriaGlobalId);
 
     List<Restaurante> listarFavoritosAtivos(List<String> favoritosIds);
+
+    boolean estaAberto(String id, LocalDateTime now);
 }
 
