@@ -1,12 +1,9 @@
 package com.pedidos.presentation.menu;
 
-import com.pedidos.application.service.AdminService;
-import com.pedidos.application.service.AutenticacaoService;
-import com.pedidos.application.service.CategoriaService;
-import com.pedidos.application.service.ClienteService;
-import com.pedidos.domain.model.Admin;
-import com.pedidos.domain.model.Usuario;
+import com.pedidos.application.service.*;
+import com.pedidos.domain.model.*;
 import com.pedidos.presentation.admin.MenuCategorias;
+import com.pedidos.presentation.restaurante.*;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
 
@@ -17,17 +14,29 @@ public class MenuLogin {
     private final AdminService adminService;
     private final ClienteService clienteService;
     private final CategoriaService categoriaService;
+    private final ProdutoService produtoService;
+    private final RestauranteService restauranteService;
+    private final AreaEntregaService areaEntregaService;
+    private final HorarioService horarioService;
 
     private final Scanner scan = new Scanner(System.in);
 
     public MenuLogin(AutenticacaoService autenticacaoService,
                      AdminService adminService,
                      ClienteService clienteService,
-                     CategoriaService categoriaService) {
+                     CategoriaService categoriaService,
+                     ProdutoService produtoService,
+                     RestauranteService restauranteService,
+                     AreaEntregaService areaEntregaService,
+                     HorarioService horarioService) {
         this.autenticacaoService = autenticacaoService;
         this.adminService = adminService;
         this.clienteService = clienteService;
         this.categoriaService = categoriaService;
+        this.produtoService = produtoService;
+        this.restauranteService = restauranteService;
+        this.areaEntregaService = areaEntregaService;
+        this.horarioService = horarioService;
     }
 
     public void iniciar() {
@@ -42,21 +51,32 @@ public class MenuLogin {
 
             try {
                 Usuario usuario = autenticacaoService.autenticar(email, senha);
-
                 System.out.println("Bem-vindo, " + usuario.getNome() + "!");
 
                 switch (usuario.getTipoUsuario()) {
                     case ADMIN -> {
                         Admin adminLogado = (Admin) usuario;
-                        // também precisa passar categoriaService e o MenuCategorias
                         MenuCategorias menuCategorias = new MenuCategorias(adminService, categoriaService, scan);
                         new com.pedidos.presentation.admin.MenuAdmin(adminService, scan, menuCategorias).exibir(adminLogado);
                     }
-                    case RESTAURANTE -> new MenuRestaurante(usuario).iniciar();
+                    case RESTAURANTE -> {
+                        Restaurante restauranteLogado = (Restaurante) usuario;
+                        MenuProdutos menuProdutos              = new MenuProdutos(produtoService, categoriaService, scan);
+                        MenuCategoriasCardapio menuCats        = new MenuCategoriasCardapio(categoriaService, scan);
+                        MenuAreaEntrega menuArea               = new MenuAreaEntrega(areaEntregaService, scan);
+                        MenuHorarios menuHorarios              = new MenuHorarios(horarioService, scan);
+                        MenuHistoricoPedidos menuHistorico     = new MenuHistoricoPedidos(scan);
+                        new MenuRestaurante(
+                                menuProdutos, menuCats, menuArea,
+                                menuHorarios, menuHistorico,
+                                restauranteService, categoriaService, scan
+                        ).exibir(restauranteLogado);
+                    }
                     case CLIENTE -> new MenuCliente(usuario, clienteService).iniciar();
                 }
             } catch (RuntimeException e) {
                 System.out.println("[ERRO] " + e.getMessage());
+                TerminalUtils.pausar();
             }
         }
     }
