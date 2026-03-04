@@ -11,19 +11,19 @@ public interface PedidoRepository {
 
     void salvar(Pedido pedido);
 
-    Optional<Pedido> buscarPorId(UUID id);
+    Optional<Pedido> buscarPorId(String id);
 
     List<Pedido> listarTodos();
 
-    List<Pedido> buscarPorCliente(UUID clienteId);
+    List<Pedido> buscarPorCliente(String clienteId);
 
-    List<Pedido> buscarPorRestaurante(UUID restauranteId);
+    List<Pedido> buscarPorRestaurante(String restauranteId);
 
-    List<Pedido> listarAtivosPorRestaurante(UUID restauranteId);
+    List<Pedido> listarAtivosPorRestaurante(String restauranteId);
 
-    List<Pedido> filtrarPorStatus(UUID restauranteId, StatusPedido status);
+    List<Pedido> filtrarPorStatus(String restauranteId, StatusPedido status);
 
-    void deletar(UUID id);
+    void deletar(String id);
 
     List<Pedido> buscarPorStatus(StatusPedido status);
 }
