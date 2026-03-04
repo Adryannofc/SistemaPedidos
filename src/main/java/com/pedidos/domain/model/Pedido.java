@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class Pedido {
 
-    private final UUID id;
+    private final String id;
     private String clienteId;
     private String restauranteId;
     private List<ItemPedido> itens;
@@ -19,8 +19,8 @@ public class Pedido {
     private BigDecimal total;
     private LocalDateTime dataPedido;
 
-    public Pedido(UUID id, UUID clienteId, UUID restauranteId, BigDecimal taxaEntrega) {
-        this.id = (id != null) ? id : UUID.randomUUID();
+    public Pedido(String id, String clienteId, String restauranteId, BigDecimal taxaEntrega) {
+        this.id = (id != null) ? id : UUID.randomUUID().toString();
         this.clienteId = (clienteId != null) ? clienteId.toString() : UUID.randomUUID().toString();
         this.restauranteId = (restauranteId != null) ? restauranteId.toString() : UUID.randomUUID().toString();
         this.taxaEntrega = (taxaEntrega != null) ? taxaEntrega : BigDecimal.ZERO;
@@ -29,7 +29,7 @@ public class Pedido {
         this.itens = new ArrayList<>();
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -47,6 +47,10 @@ public class Pedido {
 
     public StatusPedido getStatus() {
         return status;
+    }
+
+    public void setStatus(StatusPedido status) {
+        this.status = status;
     }
 
     public BigDecimal getTaxaEntrega() {

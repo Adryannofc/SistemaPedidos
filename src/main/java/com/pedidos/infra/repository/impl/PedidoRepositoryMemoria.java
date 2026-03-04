@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PedidoRepositoryMemoria implements PedidoRepository {
 
-    private final Map<UUID, Pedido> pedidos = new HashMap<>();
+    private final Map<String, Pedido> pedidos = new HashMap<>();
 
     @Override
     public void salvar(Pedido pedido) {
@@ -21,7 +21,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public Optional<Pedido> buscarPorId(UUID id) {
+    public Optional<Pedido> buscarPorId(String id) {
         return Optional.ofNullable(pedidos.get(id));
     }
 
@@ -31,7 +31,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public List<Pedido> buscarPorCliente(UUID clienteId) {
+    public List<Pedido> buscarPorCliente(String clienteId) {
         return pedidos.values()
                 .stream()
                 .filter(p -> p.getClienteId().equals(clienteId))
@@ -39,7 +39,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public List<Pedido> buscarPorRestaurante(UUID restauranteId) {
+    public List<Pedido> buscarPorRestaurante(String restauranteId) {
         return pedidos.values()
                 .stream()
                 .filter(p -> p.getRestauranteId().equals(restauranteId))
@@ -47,7 +47,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public List<Pedido> listarAtivosPorRestaurante(UUID restauranteId) {
+    public List<Pedido> listarAtivosPorRestaurante(String restauranteId) {
         return pedidos.values()
                 .stream()
                 .filter(p -> p.getRestauranteId().equals(restauranteId))
@@ -57,7 +57,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public List<Pedido> filtrarPorStatus(UUID restauranteId, StatusPedido status) {
+    public List<Pedido> filtrarPorStatus(String restauranteId, StatusPedido status) {
         return pedidos.values()
                 .stream()
                 .filter(p -> p.getRestauranteId().equals(restauranteId))
@@ -66,7 +66,7 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
     }
 
     @Override
-    public void deletar(UUID id) {
+    public void deletar(String id) {
         pedidos.remove(id);
     }
 
