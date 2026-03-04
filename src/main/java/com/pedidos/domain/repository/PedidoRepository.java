@@ -25,5 +25,5 @@ public interface PedidoRepository {
 
     void deletar(UUID id);
 
-
+    List<Pedido> buscarPorStatus(StatusPedido status);
 }
