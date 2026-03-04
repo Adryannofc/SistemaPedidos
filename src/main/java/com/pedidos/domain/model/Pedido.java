@@ -21,8 +21,8 @@ public class Pedido {
 
     public Pedido(UUID id, UUID clienteId, UUID restauranteId, BigDecimal taxaEntrega) {
         this.id = (id != null) ? id : UUID.randomUUID();
-        this.clienteId = UUID.randomUUID().toString();
-        this.restauranteId = UUID.randomUUID().toString();
+        this.clienteId = (clienteId != null) ? clienteId.toString() : UUID.randomUUID().toString();
+        this.restauranteId = (restauranteId != null) ? restauranteId.toString() : UUID.randomUUID().toString();
         this.taxaEntrega = (taxaEntrega != null) ? taxaEntrega : BigDecimal.ZERO;
         this.dataPedido = LocalDateTime.now();
         this.total = BigDecimal.ZERO;

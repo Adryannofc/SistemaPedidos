@@ -7,9 +7,7 @@ import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class MenuAreaEntrega {
@@ -30,8 +28,7 @@ public class MenuAreaEntrega {
             System.out.println("3 - Editar Área");
             System.out.println("4 - Remover Área");
             System.out.println("0 - Voltar");
-            System.out.println();
-            System.out.print("Escolha uma opção: ");
+            System.out.print("\nEscolha uma opção: ");
 
             int opcao = EntradaSegura.lerOpcao(scanner, 0, 4);
 
@@ -40,19 +37,18 @@ public class MenuAreaEntrega {
                     try {
                         List<AreaEntrega> areas = areaEntregaService.listarAreasPorRestaurante(restauranteLogado.getId());
                         if (areas.isEmpty()) {
-                            System.out.println("Nenhuma área de entrega cadastrada.");
+                            System.out.println("Nenhuma área cadastrada.");
                         } else {
-                            NumberFormat fmt = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                             for (int i = 0; i < areas.size(); i++) {
                                 AreaEntrega a = areas.get(i);
                                 System.out.println((i + 1) + " - Bairro: " + a.getBairro()
-                                        + " | Taxa: " + fmt.format(a.getTaxaEntrega())
-                                        + " | Distância: " + a.getDistanciaKm() + " km"
-                                        + " | Previsão: " + a.getPrevisaoMinutos() + " min");
+                                        + " | Taxa: R$ " + a.getTaxaEntrega()
+                                        + " | Previsão: " + a.getPrevisaoMinutos() + " min"
+                                        + " | ID: " + a.getId());
                             }
                         }
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println("Erro: " + e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
@@ -62,41 +58,19 @@ public class MenuAreaEntrega {
                         System.out.print("Bairro: ");
                         String bairro = scanner.nextLine();
 
-                        if (bairro.isBlank()) {
-                            System.out.println("O bairro não pode ser vazio.");
-                            TerminalUtils.pausar();
-                            break;
-                        }
+                        System.out.print("Distância (km, ex: 3.5): ");
+                        BigDecimal distancia = new BigDecimal(scanner.nextLine().replace(",", "."));
 
-                        System.out.print("Distância em km: ");
-                        String distanciaStr = scanner.nextLine();
-                        BigDecimal distancia;
-                        try {
-                            distancia = new BigDecimal(distanciaStr.replace(",", "."));
-                        } catch (Exception e) {
-                            System.out.println("Distância inválida.");
-                            TerminalUtils.pausar();
-                            break;
-                        }
+                        System.out.print("Taxa de entrega (R$, ex: 8.00): ");
+                        BigDecimal taxa = new BigDecimal(scanner.nextLine().replace(",", "."));
 
-                        System.out.print("Taxa de entrega: ");
-                        String taxaStr = scanner.nextLine();
-                        BigDecimal taxa;
-                        try {
-                            taxa = new BigDecimal(taxaStr.replace(",", "."));
-                        } catch (Exception e) {
-                            System.out.println("Taxa inválida.");
-                            TerminalUtils.pausar();
-                            break;
-                        }
-
-                        System.out.print("Previsão em minutos: ");
-                        int previsao = EntradaSegura.lerOpcao(scanner, 1, 999);
+                        System.out.print("Previsão (minutos): ");
+                        int previsao = Integer.parseInt(scanner.nextLine().trim());
 
                         areaEntregaService.criarAreaEntrega(restauranteLogado.getId(), bairro, distancia, taxa, previsao);
-                        System.out.println("Área de entrega para " + bairro + " cadastrada com sucesso.");
+                        System.out.println("Área cadastrada com sucesso.");
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println("Erro: " + e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
@@ -105,51 +79,33 @@ public class MenuAreaEntrega {
                     try {
                         List<AreaEntrega> areas = areaEntregaService.listarAreasPorRestaurante(restauranteLogado.getId());
                         if (areas.isEmpty()) {
-                            System.out.println("Nenhuma área para editar.");
+                            System.out.println("Nenhuma área cadastrada.");
                             TerminalUtils.pausar();
                             break;
                         }
-
                         for (int i = 0; i < areas.size(); i++) {
-                            AreaEntrega a = areas.get(i);
-                            System.out.println((i + 1) + " - " + a.getBairro());
+                            System.out.println((i + 1) + " - " + areas.get(i).getBairro());
                         }
                         System.out.print("Escolha o número da área: ");
                         int num = EntradaSegura.lerOpcao(scanner, 1, areas.size());
                         AreaEntrega selecionada = areas.get(num - 1);
 
-                        System.out.print("Bairro atual: " + selecionada.getBairro() + ". Novo bairro: ");
+                        System.out.print("Novo bairro (" + selecionada.getBairro() + "): ");
                         String novoBairro = scanner.nextLine();
 
-                        System.out.print("Distância atual: " + selecionada.getDistanciaKm() + " km. Nova distância: ");
-                        String distanciaStr = scanner.nextLine();
-                        BigDecimal novaDistancia;
-                        try {
-                            novaDistancia = new BigDecimal(distanciaStr.replace(",", "."));
-                        } catch (Exception e) {
-                            System.out.println("Distância inválida.");
-                            TerminalUtils.pausar();
-                            break;
-                        }
+                        System.out.print("Nova distância (" + selecionada.getDistanciaKm() + " km): ");
+                        BigDecimal novaDistancia = new BigDecimal(scanner.nextLine().replace(",", "."));
 
-                        System.out.print("Taxa atual: " + selecionada.getTaxaEntrega() + ". Nova taxa: ");
-                        String taxaStr = scanner.nextLine();
-                        BigDecimal novaTaxa;
-                        try {
-                            novaTaxa = new BigDecimal(taxaStr.replace(",", "."));
-                        } catch (Exception e) {
-                            System.out.println("Taxa inválida.");
-                            TerminalUtils.pausar();
-                            break;
-                        }
+                        System.out.print("Nova taxa (R$ " + selecionada.getTaxaEntrega() + "): ");
+                        BigDecimal novaTaxa = new BigDecimal(scanner.nextLine().replace(",", "."));
 
-                        System.out.print("Previsão atual: " + selecionada.getPrevisaoMinutos() + " min. Nova previsão: ");
-                        int novaPrevisao = EntradaSegura.lerOpcao(scanner, 1, 999);
+                        System.out.print("Nova previsão (" + selecionada.getPrevisaoMinutos() + " min): ");
+                        int novaPrevisao = Integer.parseInt(scanner.nextLine().trim());
 
                         areaEntregaService.editarAreaEntrega(selecionada.getId(), novoBairro, novaDistancia, novaTaxa, novaPrevisao);
-                        System.out.println("Área de entrega atualizada com sucesso.");
+                        System.out.println("Área atualizada com sucesso.");
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println("Erro: " + e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
@@ -158,11 +114,10 @@ public class MenuAreaEntrega {
                     try {
                         List<AreaEntrega> areas = areaEntregaService.listarAreasPorRestaurante(restauranteLogado.getId());
                         if (areas.isEmpty()) {
-                            System.out.println("Nenhuma área de entrega cadastrada.");
+                            System.out.println("Nenhuma área cadastrada.");
                             TerminalUtils.pausar();
                             break;
                         }
-
                         for (int i = 0; i < areas.size(); i++) {
                             System.out.println((i + 1) + " - " + areas.get(i).getBairro());
                         }
@@ -170,23 +125,21 @@ public class MenuAreaEntrega {
                         int num = EntradaSegura.lerOpcao(scanner, 1, areas.size());
                         AreaEntrega selecionada = areas.get(num - 1);
 
-                        System.out.print("Tem certeza? Clientes deste bairro não poderão mais fazer pedidos. (S/N): ");
-                        String confirmacao = scanner.nextLine();
-                        if (confirmacao.equalsIgnoreCase("S")) {
+                        System.out.print("Tem certeza? (S/N): ");
+                        if (scanner.nextLine().equalsIgnoreCase("S")) {
                             areaEntregaService.removerAreaEntrega(selecionada.getId());
-                            System.out.println("Área de entrega removida com sucesso.");
+                            System.out.println("Área removida com sucesso.");
                         } else {
                             System.out.println("Operação cancelada.");
                         }
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println("Erro: " + e.getMessage());
                     }
                     TerminalUtils.pausar();
                     break;
 
                 case 0:
                     return;
-
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
                     TerminalUtils.pausar();

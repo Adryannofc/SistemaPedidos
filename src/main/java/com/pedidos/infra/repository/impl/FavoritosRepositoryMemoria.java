@@ -53,7 +53,7 @@ public class FavoritosRepositoryMemoria implements FavoritosRepository {
     }
 
     @Override
-    public List<String> listarPorCliente(String clienteId) {
+    public List<String> listarFavoritos(String clienteId) {
         Usuario usuario = usuarioRepository.buscarPorId(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Usuário não encontrado com ID: " + clienteId));
