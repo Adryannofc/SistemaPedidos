@@ -18,6 +18,8 @@ public class MenuLogin {
     private final RestauranteService restauranteService;
     private final AreaEntregaService areaEntregaService;
     private final HorarioService horarioService;
+    private final HistoricoService historicoService;
+    private final PedidoService pedidoService;
 
     private final Scanner scan = new Scanner(System.in);
 
@@ -28,7 +30,9 @@ public class MenuLogin {
                      ProdutoService produtoService,
                      RestauranteService restauranteService,
                      AreaEntregaService areaEntregaService,
-                     HorarioService horarioService) {
+                     HorarioService horarioService,
+                     HistoricoService historicoService,
+                     PedidoService pedidoService) {
         this.autenticacaoService = autenticacaoService;
         this.adminService = adminService;
         this.clienteService = clienteService;
@@ -37,6 +41,8 @@ public class MenuLogin {
         this.restauranteService = restauranteService;
         this.areaEntregaService = areaEntregaService;
         this.horarioService = horarioService;
+        this.historicoService = historicoService;
+        this.pedidoService = pedidoService;
     }
 
     public void iniciar() {
@@ -65,7 +71,7 @@ public class MenuLogin {
                         MenuCategoriasCardapio menuCats        = new MenuCategoriasCardapio(categoriaService, scan);
                         MenuAreaEntrega menuArea               = new MenuAreaEntrega(areaEntregaService, scan);
                         MenuHorarios menuHorarios              = new MenuHorarios(horarioService, scan);
-                        MenuHistoricoPedidos menuHistorico     = new MenuHistoricoPedidos(scan);
+                        MenuHistoricoPedidos menuHistorico     = new MenuHistoricoPedidos(historicoService, pedidoService, scan);
                         new MenuRestaurante(
                                 menuProdutos, menuCats, menuArea,
                                 menuHorarios, menuHistorico,

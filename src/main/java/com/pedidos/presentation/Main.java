@@ -37,10 +37,8 @@ public class Main {
         RestauranteService restauranteService = new RestauranteService(restauranteRepo, categoriaGlobalRepo, authService);
         AreaEntregaService areaEntregaService = new AreaEntregaService(areaEntregaRepo);
         HorarioService horarioService  = new HorarioService(horarioRepo);
-        // FavoritosService favoritosService = new FavoritosService(favoritoRepo, restauranteQueryRepo);
-        // HistoricoService historicoService = new HistoricoService(pedidoRepo);
-        // PedidoService pedidoService = new PedidoService(pedidoRepo, areaEntregaService, horarioService, produtoService, enderecoService);
-        // CarrinhoService carrinhoService = new CarrinhoService(produtoService);
+        HistoricoService historicoService = new HistoricoService(pedidoRepo);
+        PedidoService pedidoService = new PedidoService(pedidoRepo, areaEntregaService, horarioService, produtoService);
 
         /** --- Seed --- */
         DataSeeder seeder = new DataSeeder(
@@ -54,7 +52,8 @@ public class Main {
         new MenuLogin(
                 authService, adminService, clienteService,
                 categoriaService, produtoService, restauranteService,
-                areaEntregaService, horarioService
+                areaEntregaService, horarioService, historicoService, pedidoService
         ).iniciar();
+
     }
 }
