@@ -40,18 +40,18 @@ public class MenuLogin {
                      CarrinhoService carrinhoService,
                      FavoritosService favoritosService) {
         this.autenticacaoService = autenticacaoService;
-        this.adminService        = adminService;
-        this.clienteService      = clienteService;
-        this.categoriaService    = categoriaService;
-        this.produtoService      = produtoService;
-        this.restauranteService  = restauranteService;
-        this.areaEntregaService  = areaEntregaService;
-        this.horarioService      = horarioService;
-        this.historicoService    = historicoService;
-        this.pedidoService       = pedidoService;
-        this.enderecoService     = enderecoService;
-        this.carrinhoService     = carrinhoService;
-        this.favoritosService    = favoritosService;
+        this.adminService = adminService;
+        this.clienteService = clienteService;
+        this.categoriaService = categoriaService;
+        this.produtoService = produtoService;
+        this.restauranteService = restauranteService;
+        this.areaEntregaService = areaEntregaService;
+        this.horarioService = horarioService;
+        this.historicoService = historicoService;
+        this.pedidoService = pedidoService;
+        this.enderecoService = enderecoService;
+        this.carrinhoService = carrinhoService;
+        this.favoritosService = favoritosService;
     }
 
     public void iniciar() {
@@ -77,10 +77,10 @@ public class MenuLogin {
                     }
                     case RESTAURANTE -> {
                         Restaurante restauranteLogado = (Restaurante) usuario;
-                        MenuProdutos menuProdutos          = new MenuProdutos(produtoService, categoriaService, scan);
-                        MenuCategoriasCardapio menuCats    = new MenuCategoriasCardapio(categoriaService, scan);
-                        MenuAreaEntrega menuArea           = new MenuAreaEntrega(areaEntregaService, scan);
-                        MenuHorarios menuHorarios          = new MenuHorarios(horarioService, scan);
+                        MenuProdutos menuProdutos = new MenuProdutos(produtoService, categoriaService, scan);
+                        MenuCategoriasCardapio menuCats = new MenuCategoriasCardapio(categoriaService, scan);
+                        MenuAreaEntrega menuArea = new MenuAreaEntrega(areaEntregaService, scan);
+                        MenuHorarios menuHorarios = new MenuHorarios(horarioService, scan);
                         MenuHistoricoPedidos menuHistorico = new MenuHistoricoPedidos(historicoService, pedidoService, scan);
                         new MenuRestaurante(
                                 menuProdutos, menuCats, menuArea,
@@ -98,6 +98,7 @@ public class MenuLogin {
                                 pedidoService,
                                 carrinhoService,
                                 favoritosService,
+                                produtoService,   // ← novo
                                 scan
                         ).iniciar();
                     }

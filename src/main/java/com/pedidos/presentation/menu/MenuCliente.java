@@ -8,9 +8,17 @@ import com.pedidos.domain.model.Pedido;
 import com.pedidos.presentation.util.EntradaSegura;
 import com.pedidos.presentation.util.TerminalUtils;
 
+import com.pedidos.application.service.CarrinhoService;
+import com.pedidos.application.service.FavoritosService;
+import com.pedidos.application.service.PedidoService;
+import com.pedidos.domain.model.Carrinho;
+import com.pedidos.domain.model.ItemPedido;
+import com.pedidos.domain.model.Produto;
+import com.pedidos.domain.model.Restaurante;
+
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -24,6 +32,7 @@ public class MenuCliente {
     private final PedidoService pedidoService;
     private final CarrinhoService carrinhoService;
     private final FavoritosService favoritosService;
+    private final ProdutoService produtoService;
 
     public MenuCliente(Cliente clienteLogado,
                        ClienteService clienteService,
@@ -32,15 +41,17 @@ public class MenuCliente {
                        PedidoService pedidoService,
                        CarrinhoService carrinhoService,
                        FavoritosService favoritosService,
+                       ProdutoService produtoService,
                        Scanner scanner) {
-        this.clienteLogado    = clienteLogado;
-        this.clienteService   = clienteService;
-        this.enderecoService  = enderecoService;
+        this.clienteLogado = clienteLogado;
+        this.clienteService = clienteService;
+        this.enderecoService = enderecoService;
         this.historicoService = historicoService;
-        this.pedidoService    = pedidoService;
-        this.carrinhoService  = carrinhoService;
+        this.pedidoService = pedidoService;
+        this.carrinhoService = carrinhoService;
         this.favoritosService = favoritosService;
-        this.scanner          = scanner;
+        this.scanner = scanner;
+        this.produtoService = produtoService;
     }
 
     public void iniciar() {
@@ -52,18 +63,21 @@ public class MenuCliente {
             System.out.println(TerminalUtils.linha("  1  \u00bb  Meu Perfil"));
             System.out.println(TerminalUtils.linha("  2  \u00bb  Meus Enderecos"));
             System.out.println(TerminalUtils.linha("  3  \u00bb  Historico de Pedidos"));
+            System.out.println(TerminalUtils.linha("  4  \u00bb  Fazer Pedido"));
             System.out.println(TerminalUtils.SEPARADOR);
             System.out.println(TerminalUtils.linha("  0  \u00bb  Sair (Logout)"));
             System.out.println(TerminalUtils.BASE);
             System.out.print("\n  Escolha uma opcao: ");
 
-            int opcao = EntradaSegura.lerOpcao(scanner, 0, 3);
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 4);
 
             switch (opcao) {
                 case 1 -> menuPerfil();
                 case 2 -> menuEnderecos();
                 case 3 -> menuHistorico();
+                case 4 -> menuFazerPedido();
                 case 0 -> {
+                    carrinhoService.encerrarCarrinho();
                     return;
                 }
             }
@@ -553,5 +567,254 @@ public class MenuCliente {
         System.out.println(TerminalUtils.linha("  Total        : " + moeda.format(pedido.calcularTotal())));
         System.out.println(TerminalUtils.BASE);
         System.out.println();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+// RF-CLI-05 — Fazer Pedido
+// ─────────────────────────────────────────────────────────────────────────
+
+    private void menuFazerPedido() {
+        while (true) {
+            TerminalUtils.limparTela();
+            TerminalUtils.cabecalho("FAZER PEDIDO", clienteLogado.getNome());
+
+            System.out.println(TerminalUtils.TOPO);
+            System.out.println(TerminalUtils.linha("  1  \u00bb  Escolher Restaurante"));
+            System.out.println(TerminalUtils.linha("  2  \u00bb  Ver Carrinho"));
+            System.out.println(TerminalUtils.linha("  3  \u00bb  Finalizar Pedido (Checkout)"));
+            System.out.println(TerminalUtils.SEPARADOR);
+            System.out.println(TerminalUtils.linha("  0  \u00bb  Voltar"));
+            System.out.println(TerminalUtils.BASE);
+            System.out.print("\n  Escolha uma opcao: ");
+
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 3);
+
+            switch (opcao) {
+                case 1 -> acaoEscolherRestaurante();
+                case 2 -> acaoVerCarrinho();
+                case 3 -> acaoCheckout();
+                case 0 -> {
+                    return;
+                }
+            }
+        }
+    }
+
+    private void acaoEscolherRestaurante() {
+        TerminalUtils.limparTela();
+        TerminalUtils.cabecalho("ESCOLHER RESTAURANTE");
+        try {
+            List<Restaurante> restaurantes = favoritosService
+                    .listarRestaurantesDisponiveisParaFavoritar(clienteLogado.getId());
+
+            // lista todos ativos — reutiliza o método que já retorna ativos
+            List<Restaurante> ativos = favoritosService
+                    .listarTodosFavoritos(clienteLogado.getId());
+
+            // usa restauranteQueryRepo via favoritosService — lista todos ativos
+            // como não temos acesso direto, usamos o workaround abaixo:
+            List<Restaurante> todos = new java.util.ArrayList<>();
+            todos.addAll(favoritosService.listarFavoritos(clienteLogado.getId()));
+            todos.addAll(favoritosService.listarRestaurantesDisponiveisParaFavoritar(clienteLogado.getId()));
+
+            if (todos.isEmpty()) {
+                TerminalUtils.aviso("Nenhum restaurante disponivel no momento.");
+                TerminalUtils.pausar();
+                return;
+            }
+
+            System.out.println(TerminalUtils.TOPO);
+            System.out.println(TerminalUtils.linha("  #   Nome                         Status"));
+            System.out.println(TerminalUtils.SEPARADOR);
+            for (int i = 0; i < todos.size(); i++) {
+                Restaurante r = todos.get(i);
+                System.out.println(TerminalUtils.linha(String.format(
+                        "  %-3d %-28s  %s",
+                        (i + 1), r.getNome(), r.isStatusAtivo() ? "ABERTO" : "FECHADO")));
+            }
+            System.out.println(TerminalUtils.BASE);
+            System.out.print("\n  Escolha o numero do restaurante: ");
+
+            Restaurante escolhido = todos.get(EntradaSegura.lerOpcao(scanner, 1, todos.size()) - 1);
+
+            carrinhoService.iniciarCarrinho(clienteLogado.getId(), escolhido.getId());
+            TerminalUtils.sucesso("Restaurante \"" + escolhido.getNome() + "\" selecionado.");
+
+            // já vai direto pro cardápio
+            acaoNavegarCardapio(escolhido);
+
+        } catch (Exception e) {
+            TerminalUtils.erro(e.getMessage());
+        }
+        TerminalUtils.pausar();
+    }
+
+    private void acaoNavegarCardapio(Restaurante restaurante) {
+        while (true) {
+            TerminalUtils.limparTela();
+            TerminalUtils.cabecalho("CARDAPIO", restaurante.getNome());
+            try {
+                List<Produto> produtos = produtoService.listarAtivosPorRestaurante(restaurante.getId());
+
+                if (produtos.isEmpty()) {
+                    TerminalUtils.aviso("Nenhum produto disponivel.");
+                    TerminalUtils.pausar();
+                    return;
+                }
+
+                System.out.println(TerminalUtils.TOPO);
+                System.out.println(TerminalUtils.linha("  #   Nome                         Preco"));
+                System.out.println(TerminalUtils.SEPARADOR);
+                NumberFormat moeda = NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+                for (int i = 0; i < produtos.size(); i++) {
+                    Produto p = produtos.get(i);
+                    System.out.println(TerminalUtils.linha(String.format(
+                            "  %-3d %-28s  %s",
+                            (i + 1), p.getNome(), moeda.format(p.getPreco()))));
+                }
+                System.out.println(TerminalUtils.SEPARADOR);
+                System.out.println(TerminalUtils.linha("  0  \u00bb  Voltar"));
+                System.out.println(TerminalUtils.BASE);
+                System.out.print("\n  Escolha o produto (0 para voltar): ");
+
+                int num = EntradaSegura.lerOpcao(scanner, 0, produtos.size());
+                if (num == 0) return;
+
+                Produto selecionado = produtos.get(num - 1);
+
+                System.out.print("  Quantidade: ");
+                int qtd;
+                try {
+                    qtd = Integer.parseInt(scanner.nextLine().trim());
+                } catch (NumberFormatException e) {
+                    TerminalUtils.erro("Quantidade invalida.");
+                    TerminalUtils.pausar();
+                    continue;
+                }
+
+                carrinhoService.adicionarItem(selecionado, qtd);
+                TerminalUtils.sucesso("\"" + selecionado.getNome() + "\" adicionado ao carrinho.");
+                TerminalUtils.pausar();
+
+            } catch (Exception e) {
+                TerminalUtils.erro(e.getMessage());
+                TerminalUtils.pausar();
+            }
+        }
+    }
+
+    private void acaoVerCarrinho() {
+        TerminalUtils.limparTela();
+        TerminalUtils.cabecalho("MEU CARRINHO");
+        try {
+            if (!carrinhoService.temCarrinhoAtivo()) {
+                TerminalUtils.aviso("Carrinho vazio. Escolha um restaurante primeiro.");
+                TerminalUtils.pausar();
+                return;
+            }
+
+            Carrinho carrinho = carrinhoService.getCarrinho();
+            NumberFormat moeda = NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+
+            System.out.println(TerminalUtils.TOPO);
+            System.out.println(TerminalUtils.linha("  #   Produto                  Qtd   Subtotal"));
+            System.out.println(TerminalUtils.SEPARADOR);
+            List<ItemPedido> itens = carrinho.getItens();
+            for (int i = 0; i < itens.size(); i++) {
+                ItemPedido item = itens.get(i);
+                System.out.println(TerminalUtils.linha(String.format(
+                        "  %-3d %-24s %-5d %s",
+                        (i + 1), item.getNomeProduto(),
+                        item.getQuantidade(),
+                        moeda.format(item.calcularSubtotal()))));
+            }
+            System.out.println(TerminalUtils.SEPARADOR);
+            System.out.println(TerminalUtils.linha("  Subtotal: " + moeda.format(carrinho.calcularSubtotal())));
+            System.out.println(TerminalUtils.BASE);
+
+            System.out.println("\n  1 - Remover item");
+            System.out.println("  2 - Esvaziar carrinho");
+            System.out.println("  0 - Voltar");
+            System.out.print("\n  Escolha: ");
+
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 2);
+            if (opcao == 1) {
+                System.out.print("  Numero do item a remover: ");
+                int num = EntradaSegura.lerOpcao(scanner, 1, itens.size());
+                carrinhoService.removerItem(itens.get(num - 1).getProdutoId());
+                TerminalUtils.sucesso("Item removido.");
+            } else if (opcao == 2) {
+                carrinhoService.limpar();
+                TerminalUtils.sucesso("Carrinho esvaziado.");
+            }
+
+        } catch (Exception e) {
+            TerminalUtils.erro(e.getMessage());
+        }
+        TerminalUtils.pausar();
+    }
+
+    private void acaoCheckout() {
+        TerminalUtils.limparTela();
+        TerminalUtils.cabecalho("CHECKOUT");
+        try {
+            if (!carrinhoService.temCarrinhoAtivo()) {
+                TerminalUtils.aviso("Carrinho vazio. Adicione produtos antes de finalizar.");
+                TerminalUtils.pausar();
+                return;
+            }
+
+            // seleciona endereço
+            List<Endereco> enderecos = enderecoService.listarEnderecosPorCliente(clienteLogado.getId());
+            if (enderecos.isEmpty()) {
+                TerminalUtils.aviso("Cadastre um endereco antes de finalizar o pedido.");
+                TerminalUtils.pausar();
+                return;
+            }
+
+            System.out.println("  Selecione o endereco de entrega:\n");
+            exibirListaEnderecos(enderecos);
+            System.out.print("  Escolha o numero: ");
+            Endereco enderecoEscolhido = enderecos.get(
+                    EntradaSegura.lerOpcao(scanner, 1, enderecos.size()) - 1);
+
+            // resumo
+            Carrinho carrinho = carrinhoService.getCarrinho();
+            NumberFormat moeda = NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+
+            System.out.println();
+            System.out.println(TerminalUtils.TOPO);
+            System.out.println(TerminalUtils.linha("  RESUMO DO PEDIDO"));
+            System.out.println(TerminalUtils.SEPARADOR);
+            carrinho.getItens().forEach(item -> System.out.println(TerminalUtils.linha(
+                    String.format("  %-24s x%-3d %s",
+                            item.getNomeProduto(), item.getQuantidade(),
+                            moeda.format(item.calcularSubtotal())))));
+            System.out.println(TerminalUtils.SEPARADOR);
+            System.out.println(TerminalUtils.linha("  Endereco : " + enderecoEscolhido.getApelido()
+                    + " — " + enderecoEscolhido.getBairro()));
+            System.out.println(TerminalUtils.linha("  Subtotal : " + moeda.format(carrinho.calcularSubtotal())));
+            System.out.println(TerminalUtils.linha("  (taxa de entrega calculada no fechamento)"));
+            System.out.println(TerminalUtils.BASE);
+
+            if (!TerminalUtils.confirmarPerigo("Confirmar pedido?", scanner)) {
+                TerminalUtils.aviso("Pedido cancelado.");
+                TerminalUtils.pausar();
+                return;
+            }
+
+            Pedido pedido = pedidoService.criarPedido(
+                    clienteLogado, carrinho, enderecoEscolhido.getId());
+
+            carrinhoService.encerrarCarrinho();
+
+            NumberFormat moedaFmt = NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+            TerminalUtils.sucesso("Pedido realizado! ID: " + pedido.getId().substring(0, 8)
+                    + " | Total: " + moedaFmt.format(pedido.calcularTotal()));
+
+        } catch (Exception e) {
+            TerminalUtils.erro(e.getMessage());
+        }
+        TerminalUtils.pausar();
     }
 }
