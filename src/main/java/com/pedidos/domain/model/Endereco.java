@@ -11,13 +11,13 @@ public class Endereco {
     private String bairro;
     private boolean isPadrao;
 
-    public Endereco(String clienteId, String apelido, String rua, String bairro) {
+    public Endereco(String clienteId, String apelido, String rua, String bairro, boolean isPadrao) {
         this.id = UUID.randomUUID().toString();
         this.clienteId = clienteId;
         this.apelido = apelido;
         this.rua = rua;
         this.bairro = bairro;
-        this.isPadrao = false;
+        this.isPadrao = isPadrao;
     }
 
     public String getId() { return id; }

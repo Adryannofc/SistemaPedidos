@@ -161,9 +161,9 @@ public class DataSeeder {
                 cliente1.getId(),
                 "Casa",
                 "Rua das Flores",
-                "Centro"
+                "Centro",
+                true
         );
-        endereco1.setPadrao(true);
         enderecoRepository.salvar(endereco1);
 
         // ========== CLIENTE 2 - MARIA SOUZA ==========
@@ -181,9 +181,9 @@ public class DataSeeder {
                 cliente2.getId(),
                 "Trabalho",
                 "Av. Brasil",
-                "Jardim América"
+                "Jardim América",
+                true
         );
-        endereco2.setPadrao(true);
         enderecoRepository.salvar(endereco2);
 
         // ========== ADMIN ==========
