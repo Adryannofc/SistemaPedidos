@@ -70,4 +70,11 @@ public class PedidoRepositoryMemoria implements PedidoRepository {
         pedidos.remove(id);
     }
 
+    public List<Pedido> buscarPorStatus(StatusPedido status) {
+        return pedidos.values()
+                .stream()
+                .filter(p -> p.getStatus() == status)
+                .collect(Collectors.toList());
+    }
+
 }
