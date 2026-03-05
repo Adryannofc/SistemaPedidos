@@ -91,4 +91,9 @@ public class ProdutoService {
             throw new IllegalArgumentException("Preço deve ser maior que zero.");
         }
     }
+
+    public Produto buscarPorId(String produtoId) {
+        return produtoRepository.buscarPorId(produtoId)
+                .orElseThrow(() -> new IllegalArgumentException("Produto nao encontrado."));
+    }
 }
