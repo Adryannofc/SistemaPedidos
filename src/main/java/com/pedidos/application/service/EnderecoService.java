@@ -3,9 +3,10 @@ package com.pedidos.application.service;
 import com.pedidos.domain.model.Endereco;
 import com.pedidos.domain.repository.EnderecoRepository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.ArrayList;
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
@@ -55,14 +56,11 @@ public class EnderecoService {
     }
 
     public List<Endereco> listarEnderecosPorCliente(String clienteId) {
-
-        List<Endereco> lista =
-                enderecoRepository.buscarPorClienteId(clienteId);
-
+        List<Endereco> lista = new ArrayList<>(
+                enderecoRepository.buscarPorClienteId(clienteId)
+        );
         lista.sort(Comparator.comparing(Endereco::isPadrao).reversed());
-
-         return lista;
-
+        return lista;
     }
 
     public Endereco buscarPorId(String id) {
