@@ -5,11 +5,15 @@ import com.pedidos.domain.repository.*;
 import com.pedidos.infra.repository.impl.*;
 import com.pedidos.infra.seed.DataSeeder;
 import com.pedidos.presentation.menu.MenuLogin;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
-        // --- Repositórios ---
+        Scanner scanner =  new Scanner(System.in);
+
+        /** --- Repositórios --- */  /**Obs: Main seujeita a checkout(Services não terminados)*/
+        //UsuarioRepositoryMemoria usuarioRepo = new UsuarioRepositoryMemoria();*/
         AdminRepositoryMemoria adminRepo = new AdminRepositoryMemoria();
         RestauranteRepositoryMemoria restauranteRepo = new RestauranteRepositoryMemoria();
         ClienteRepositoryMemoria clienteRepo = new ClienteRepositoryMemoria();
@@ -20,8 +24,11 @@ public class Main {
         HorarioFuncionamentoRepositoryMemoria horarioRepo  = new HorarioFuncionamentoRepositoryMemoria();
         EnderecoRepositoryMemoria enderecoRepo = new EnderecoRepositoryMemoria();
         PedidoRepositoryMemoria pedidoRepo = new PedidoRepositoryMemoria();
+        //FavoritosRepositoryMemoria favoritosRepo = new FavoritosRepositoryMemoria(usuarioRepo);*/
 
-        // --- Services ---
+        // RestauranteQueryRepositoryMemoria restauranteQueryRepo = new RestauranteQueryRepositoryMemoria(usuarioRepos, horarioRepo);*/
+
+        /** --- Services --- */
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
         AdminService adminService = new AdminService(adminRepo, authService, restauranteRepo);
         ClienteService clienteService = new ClienteService(clienteRepo, authService, adminRepo, restauranteRepo);
@@ -33,15 +40,15 @@ public class Main {
         HistoricoService historicoService = new HistoricoService(pedidoRepo);
         PedidoService pedidoService = new PedidoService(pedidoRepo, areaEntregaService, horarioService, produtoService);
 
-        // --- Seed ---
+        /** --- Seed --- */
         DataSeeder seeder = new DataSeeder(
                 adminRepo, clienteRepo, restauranteRepo, authService,
                 produtoRepo, categoriaGlobalRepo, categoriaCardapioRepo,
-                enderecoRepo, horarioRepo, areaEntregaRepo
+                enderecoRepo, horarioRepo, areaEntregaRepo /** terminar de repassar */
         );
         seeder.popular();
 
-        // --- Inicia aplicação ---
+        /** --- Inicia aplicação --- */
         new MenuLogin(
                 authService, adminService, clienteService,
                 categoriaService, produtoService, restauranteService,
