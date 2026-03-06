@@ -35,7 +35,7 @@ public class AreaEntregaService {
         }
 
         if (distanciaKm.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Previsão de entrega deve ser maior que zero");
+            throw new IllegalArgumentException("Distância deve ser maior que zero");
         }
 
         if (previsaoMinutos <= 0) {

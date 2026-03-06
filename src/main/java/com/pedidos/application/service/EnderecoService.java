@@ -6,7 +6,7 @@ import com.pedidos.domain.repository.EnderecoRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ArrayList;
+
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;

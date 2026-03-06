@@ -62,13 +62,6 @@ public class PedidoService {
         BigDecimal taxaEntrega = areaEntregaService.buscarTaxaPorBairro(
                 restauranteId, endereco.getBairro());
 
-        // 5. Total
-        BigDecimal subtotal = carrinho.getItens().stream()
-                .map(ItemPedido::calcularSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal total = subtotal.add(taxaEntrega)
-                .setScale(2, RoundingMode.HALF_UP);
 
         // 6. Persiste
         Pedido pedido = new Pedido(null, cliente.getId(), restauranteId, taxaEntrega);
@@ -98,8 +91,24 @@ public class PedidoService {
                 break;
 
             case CONFIRMADO:
-                if (novo == StatusPedido.ENTREGUE || novo == StatusPedido.CANCELADO) return;
+                if (novo == StatusPedido.EM_PREPARO || novo == StatusPedido.CANCELADO) return;
                 if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO)
+                    throw new IllegalStateException(
+                            "Nao e possivel voltar ao status anterior.");
+                break;
+
+            case EM_PREPARO:
+                if (novo == StatusPedido.SAIU_PARA_ENTREGA || novo == StatusPedido.CANCELADO) return;
+                if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO || novo == StatusPedido.CONFIRMADO)
+                    throw new IllegalStateException(
+                            "Nao e possivel voltar ao status anterior.");
+                break;
+
+            case SAIU_PARA_ENTREGA:
+                if (novo == StatusPedido.ENTREGUE) return;
+                if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO
+                        || novo == StatusPedido.EM_PREPARO
+                        || novo == StatusPedido.CONFIRMADO)
                     throw new IllegalStateException(
                             "Nao e possivel voltar ao status anterior.");
                 break;

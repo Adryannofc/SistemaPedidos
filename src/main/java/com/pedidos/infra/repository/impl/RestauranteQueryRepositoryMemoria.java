@@ -52,7 +52,8 @@ public class RestauranteQueryRepositoryMemoria implements RestauranteQueryReposi
                 .filter(u -> u instanceof Restaurante)
                 .map(u -> (Restaurante) u)
                 .filter(Restaurante::isStatusAtivo)
-                .filter(r -> r.getCategoriaGlobalId().equals(categoriaGlobalId))
+                .filter(r -> r.getCategoriaGlobalId() != null
+                        && r.getCategoriaGlobalId().equals(categoriaGlobalId))
                 .collect(Collectors.toList());
     }
 
