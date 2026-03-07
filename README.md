@@ -157,7 +157,7 @@ O `DataSeeder` popula automaticamente ao iniciar:
 | Módulo             | Status |
 |--------------------|--------|
 | Autenticação       | ✅     |
-| Gestão de Admin    | ✅     |
+| Gestão de Admin    | ⚠️     |
 | Gestão de Restaurante | ✅  |
 | Gestão de Cliente  | ✅     |
 | Endereços          | ✅     |
@@ -169,4 +169,4 @@ O `DataSeeder` popula automaticamente ao iniciar:
 | Carrinho           | ✅     |
 | Pedidos / Checkout | ✅     |
 | Histórico          | ✅     |
-| Favoritos          | ✅     |
+| Favoritos          | ⚠️     |
