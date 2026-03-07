@@ -35,5 +35,7 @@ public class HorarioFuncionamentoRepositoryMemoria implements HorarioFuncionamen
     }
 
     @Override
-    public void deletar(String id) {}
+    public void deletar(String id) {
+         storage.remove(id);
+    }
 }

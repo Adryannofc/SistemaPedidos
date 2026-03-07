@@ -26,7 +26,7 @@ public class Cliente extends Usuario {
     }
 
     public void setCpf(String cpf) {
-        String regexCpf = "(\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2}|\\\\d{11})$";
+        String regexCpf = "(\\d{11})";
         if (cpf != null && cpf.matches(regexCpf))
         {
             this.cpf = cpf;
@@ -39,7 +39,7 @@ public class Cliente extends Usuario {
 
     @Override
     public void exibirDetalhes(){
-        TerminalUtils.cabecalho("PERFIL RESTAURANTE");
+        TerminalUtils.cabecalho("PERFIL CLIENTE");
         System.out.println( "ID: " + getId());
         System.out.println( "Nome: " + getNome());
         System.out.println( "E-mail: " + getEmail());

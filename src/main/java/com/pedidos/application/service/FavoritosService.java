@@ -13,6 +13,11 @@ public class FavoritosService {
 
     private final RestauranteQueryRepository restauranteQueryRepository;
 
+    public FavoritosService(FavoritosRepository favoritosRepository, RestauranteQueryRepository restauranteQueryRepository) {
+        this.favoritosRepository = favoritosRepository;
+        this.restauranteQueryRepository = restauranteQueryRepository;
+    }
+
     public void marcarFavorito(String clienteId, String restauranteId){
         if (restauranteId == null || restauranteId.isBlank()) {
             throw new IllegalArgumentException("Restaurante é obrigatório");
@@ -73,8 +78,4 @@ public class FavoritosService {
                 .toList();
     }
 
-    public FavoritosService(FavoritosRepository favoritosRepository, RestauranteQueryRepository restauranteQueryRepository) {
-        this.favoritosRepository = favoritosRepository;
-        this.restauranteQueryRepository = restauranteQueryRepository;
-    }
 }
