@@ -50,9 +50,7 @@ infra/          → implementações de repositório (HashMap in-memory), seed
 ##  Tipos de Usuário
 
 ### Admin
-- Gerencia restaurantes (aprovar, bloquear, remover)
-- Gerencia categorias globais (criar, editar, remover)
-- Acesso ao próprio perfil e troca de senha
+- Em construcao
 
 ### Restaurante
 - Gerencia produtos e categorias do cardápio
