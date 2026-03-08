@@ -58,10 +58,9 @@ public class CategoriaService {
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
         boolean temRestauranteVinculado = restauranteRepository.listarTodos().stream()
-                .anyMatch(u -> {
-                    com.pedidos.domain.model.Restaurante r = (com.pedidos.domain.model.Restaurante) u;
-                    return r.getCategoriaGlobalId().equals(id);
-                });
+                .filter(u -> u instanceof com.pedidos.domain.model.Restaurante)
+                .map(u -> (com.pedidos.domain.model.Restaurante) u)
+                .anyMatch(r -> r.getCategoriaGlobalId().equals(id));
         if (temRestauranteVinculado) {
             throw new IllegalArgumentException("Categoria em uso por um restaurante — remoção bloqueada.");
         }

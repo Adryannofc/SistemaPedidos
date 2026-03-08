@@ -2,6 +2,7 @@ package com.pedidos.presentation.menu;
 
 import com.pedidos.application.service.*;
 import com.pedidos.domain.model.*;
+import com.pedidos.domain.repository.*;
 import com.pedidos.presentation.admin.MenuCategorias;
 import com.pedidos.presentation.restaurante.*;
 import com.pedidos.presentation.util.EntradaSegura;
@@ -23,6 +24,7 @@ public class MenuLogin {
     private final EnderecoService enderecoService;
     private final CarrinhoService carrinhoService;
     private final FavoritosService favoritosService;
+    private final RestauranteQueryRepository restauranteQueryRepository;
 
     private final Scanner scan = new Scanner(System.in);
 
@@ -38,7 +40,8 @@ public class MenuLogin {
                      PedidoService pedidoService,
                      EnderecoService enderecoService,
                      CarrinhoService carrinhoService,
-                     FavoritosService favoritosService) {
+                     FavoritosService favoritosService,
+                     RestauranteQueryRepository restauranteQueryRepository) {
         this.autenticacaoService = autenticacaoService;
         this.adminService = adminService;
         this.clienteService = clienteService;
@@ -52,6 +55,7 @@ public class MenuLogin {
         this.enderecoService = enderecoService;
         this.carrinhoService = carrinhoService;
         this.favoritosService = favoritosService;
+        this.restauranteQueryRepository = restauranteQueryRepository;
     }
 
     public void iniciar() {
@@ -98,7 +102,8 @@ public class MenuLogin {
                                 pedidoService,
                                 carrinhoService,
                                 favoritosService,
-                                produtoService,   // ← novo
+                                produtoService,
+                                restauranteQueryRepository,
                                 scan
                         ).iniciar();
                     }
