@@ -26,7 +26,6 @@ public class AdminService {
         String hash = autenticacaoService.hashSenha(senha);
         Admin admin = new Admin(nome, email, hash);
         adminRepository.salvar(admin);
-        System.out.println("Administrador cadastrado com sucesso.");
     }
 
     public void visualizarPerfil(Usuario usuario) {
@@ -46,7 +45,6 @@ public class AdminService {
         String novoHash = autenticacaoService.hashSenha(novaSenha);
         usuario.setSenhaHash(novoHash);
         adminRepository.salvar(usuario);
-        System.out.println("Senha alterada com sucesso.");
     }
 
     // --- métodos ADM-02 — gestão de restaurantes ---

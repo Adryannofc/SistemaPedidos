@@ -15,6 +15,7 @@ import com.pedidos.domain.model.Carrinho;
 import com.pedidos.domain.model.ItemPedido;
 import com.pedidos.domain.model.Produto;
 import com.pedidos.domain.model.Restaurante;
+import com.pedidos.domain.repository.RestauranteQueryRepository;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MenuCliente {
     private final CarrinhoService carrinhoService;
     private final FavoritosService favoritosService;
     private final ProdutoService produtoService;
+    private final RestauranteQueryRepository restauranteQueryRepository;
 
     public MenuCliente(Cliente clienteLogado,
                        ClienteService clienteService,
@@ -42,6 +44,7 @@ public class MenuCliente {
                        CarrinhoService carrinhoService,
                        FavoritosService favoritosService,
                        ProdutoService produtoService,
+                       RestauranteQueryRepository restauranteQueryRepository,
                        Scanner scanner) {
         this.clienteLogado = clienteLogado;
         this.clienteService = clienteService;
@@ -50,9 +53,11 @@ public class MenuCliente {
         this.pedidoService = pedidoService;
         this.carrinhoService = carrinhoService;
         this.favoritosService = favoritosService;
-        this.scanner = scanner;
         this.produtoService = produtoService;
+        this.restauranteQueryRepository = restauranteQueryRepository;
+        this.scanner = scanner;
     }
+
 
     public void iniciar() {
         while (true) {
@@ -604,20 +609,11 @@ public class MenuCliente {
         TerminalUtils.limparTela();
         TerminalUtils.cabecalho("ESCOLHER RESTAURANTE");
         try {
-            List<Restaurante> restaurantes = favoritosService
-                    .listarRestaurantesDisponiveisParaFavoritar(clienteLogado.getId());
+            // Lista restaurantes ativos E abertos no momento atual
+            List<Restaurante> restaurantesDisponiveis = restauranteQueryRepository
+                    .listarAtivosEAbertos(java.time.LocalDateTime.now());
 
-            // lista todos ativos — reutiliza o método que já retorna ativos
-            List<Restaurante> ativos = favoritosService
-                    .listarTodosFavoritos(clienteLogado.getId());
-
-            // usa restauranteQueryRepo via favoritosService — lista todos ativos
-            // como não temos acesso direto, usamos o workaround abaixo:
-            List<Restaurante> todos = new java.util.ArrayList<>();
-            todos.addAll(favoritosService.listarFavoritos(clienteLogado.getId()));
-            todos.addAll(favoritosService.listarRestaurantesDisponiveisParaFavoritar(clienteLogado.getId()));
-
-            if (todos.isEmpty()) {
+            if (restaurantesDisponiveis.isEmpty()) {
                 TerminalUtils.aviso("Nenhum restaurante disponivel no momento.");
                 TerminalUtils.pausar();
                 return;
@@ -626,16 +622,16 @@ public class MenuCliente {
             System.out.println(TerminalUtils.TOPO);
             System.out.println(TerminalUtils.linha("  #   Nome                         Status"));
             System.out.println(TerminalUtils.SEPARADOR);
-            for (int i = 0; i < todos.size(); i++) {
-                Restaurante r = todos.get(i);
+            for (int i = 0; i < restaurantesDisponiveis.size(); i++) {
+                Restaurante r = restaurantesDisponiveis.get(i);
                 System.out.println(TerminalUtils.linha(String.format(
                         "  %-3d %-28s  %s",
-                        (i + 1), r.getNome(), r.isStatusAtivo() ? "ABERTO" : "FECHADO")));
+                        (i + 1), r.getNome(), "ABERTO")));
             }
             System.out.println(TerminalUtils.BASE);
             System.out.print("\n  Escolha o numero do restaurante: ");
 
-            Restaurante escolhido = todos.get(EntradaSegura.lerOpcao(scanner, 1, todos.size()) - 1);
+            Restaurante escolhido = restaurantesDisponiveis.get(EntradaSegura.lerOpcao(scanner, 1, restaurantesDisponiveis.size()) - 1);
 
             carrinhoService.iniciarCarrinho(clienteLogado.getId(), escolhido.getId());
             TerminalUtils.sucesso("Restaurante \"" + escolhido.getNome() + "\" selecionado.");

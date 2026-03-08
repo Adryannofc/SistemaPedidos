@@ -25,7 +25,7 @@ public class Main {
         EnderecoRepositoryMemoria enderecoRepo = new EnderecoRepositoryMemoria();
         PedidoRepositoryMemoria pedidoRepo = new PedidoRepositoryMemoria();
         FavoritosRepositoryMemoria favoritosRepo = new FavoritosRepositoryMemoria(clienteRepo);
-        RestauranteQueryRepositoryMemoria restauranteQueryRepo = new RestauranteQueryRepositoryMemoria(restauranteRepo, horarioRepo);
+        RestauranteQueryRepositoryMemoria restauranteQueryRepositoryMemoria = new RestauranteQueryRepositoryMemoria(restauranteRepo, horarioRepo);
 
         // --- Services ---
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
@@ -40,7 +40,7 @@ public class Main {
         HistoricoService historicoService = new HistoricoService(pedidoRepo);
         PedidoService pedidoService = new PedidoService(pedidoRepo, areaEntregaService, horarioService, produtoService, enderecoService);
         CarrinhoService carrinhoService = new CarrinhoService();
-        FavoritosService favoritosService = new FavoritosService(favoritosRepo, restauranteQueryRepo);
+        FavoritosService favoritosService = new FavoritosService(favoritosRepo, restauranteQueryRepositoryMemoria);
 
         // --- Seed ---
         DataSeeder seeder = new DataSeeder(
@@ -56,7 +56,7 @@ public class Main {
                 categoriaService, produtoService, restauranteService,
                 areaEntregaService, horarioService, historicoService,
                 pedidoService, enderecoService, carrinhoService,
-                favoritosService
+                favoritosService, restauranteQueryRepositoryMemoria
         ).iniciar();
     }
 }
