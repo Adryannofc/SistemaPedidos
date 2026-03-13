@@ -106,11 +106,11 @@ public class MenuCliente {
     private void acaoVisualizarPerfil() {
         TerminalUtils.limparTela();
         TerminalUtils.cabecalho("VISUALIZAR PERFIL");
-        try {
-            clienteService.visualizarPerfil(clienteLogado);
-        } catch (Exception e) {
-            TerminalUtils.erro(e.getMessage());
-        }
+        System.out.println("  ID      : " + clienteLogado.getId());
+        System.out.println("  Nome    : " + clienteLogado.getNome());
+        System.out.println("  E-mail  : " + clienteLogado.getEmail());
+        System.out.println("  CPF     : " + clienteLogado.getCpf());
+        System.out.println("  Telefone: " + clienteLogado.getTelefone());
         TerminalUtils.pausar();
     }
 

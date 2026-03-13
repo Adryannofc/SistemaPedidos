@@ -166,11 +166,10 @@ public class MenuAdmin {
                     break;
 
                 case 7:
-                    try {
-                        adminService.visualizarPerfil(adminLogado);
-                    } catch (Exception e) {
-                        System.out.println("Erro: " + e.getMessage());
-                    }
+                    TerminalUtils.cabecalho("PAINEL DO ADMINISTRADOR");
+                    System.out.println("Id    : " + adminLogado.getId());
+                    System.out.println("Nome  : " + adminLogado.getNome());
+                    System.out.println("E-mail: " + adminLogado.getEmail());
                     TerminalUtils.pausar();
                     break;
 

@@ -1,12 +1,9 @@
 package com.pedidos.domain.model;
 
 import com.pedidos.domain.enums.TipoUsuario;
-import com.pedidos.presentation.util.TerminalUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 public class Cliente extends Usuario {
 
@@ -35,16 +32,6 @@ public class Cliente extends Usuario {
             throw new IllegalArgumentException("CPF inválido!");
         };
 
-    }
-
-    @Override
-    public void exibirDetalhes(){
-        TerminalUtils.cabecalho("PERFIL RESTAURANTE");
-        System.out.println( "ID: " + getId());
-        System.out.println( "Nome: " + getNome());
-        System.out.println( "E-mail: " + getEmail());
-        System.out.println(  "CPF: " + getCpf());
-        System.out.println( "Telefone: " + getTelefone());
     }
 
     public String getTelefone() {

@@ -40,7 +40,10 @@ public class MenuAdmin {
     public void telaPerfil() {
         TerminalUtils.limparTela();
         TerminalUtils.cabecalho("PERFIL");
-        adminService.visualizarPerfil(usuario);
+        TerminalUtils.cabecalho("PAINEL DO ADMINISTRADOR");
+        System.out.println("Id    : " + usuario.getId());
+        System.out.println("Nome  : " + usuario.getNome());
+        System.out.println("E-mail: " + usuario.getEmail());
 
         System.out.println("[1] Mudar Senha");
         System.out.println("[0] Voltar");

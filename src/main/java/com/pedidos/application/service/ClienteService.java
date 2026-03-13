@@ -35,10 +35,6 @@ public class ClienteService {
 
     }
 
-    public void visualizarPerfil(Usuario usuario) {
-        usuario.exibirDetalhes();
-    }
-
     public void editarNome(Cliente cliente, String novoNome) {
         cliente.setNome(novoNome);
         clienteRepository.salvar(cliente);

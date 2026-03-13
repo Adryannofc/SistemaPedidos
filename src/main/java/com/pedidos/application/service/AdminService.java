@@ -29,10 +29,6 @@ public class AdminService {
         System.out.println("Administrador cadastrado com sucesso.");
     }
 
-    public void visualizarPerfil(Usuario usuario) {
-        usuario.exibirDetalhes();
-    }
-
     public void alterarSenha(Usuario usuario, String senhaAtual, String novaSenha, String confirmacaoSenha) {
         String hashAtual = autenticacaoService.hashSenha(senhaAtual);
         if (!usuario.verificarSenha(hashAtual)) {

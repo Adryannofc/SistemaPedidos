@@ -21,10 +21,6 @@ public class RestauranteService {
         this.autenticacaoService = autenticacaoService;
     }
 
-    public void visualizarPerfil(Restaurante restaurante) {
-        restaurante.exibirDetalhes();
-    }
-
     public void editarPerfil(Restaurante restaurante,
                              String novoNome,
                              String novoCnpj,

@@ -20,8 +20,6 @@ public abstract class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public abstract void exibirDetalhes();
-
     public String getId() {
         return id;
     }

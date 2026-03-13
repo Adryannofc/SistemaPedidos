@@ -122,11 +122,12 @@ public class MenuRestaurante {
     private void acaoVisualizarPerfil(Restaurante restauranteLogado) {
         TerminalUtils.limparTela();
         TerminalUtils.cabecalho("VISUALIZAR PERFIL", "Restaurante: " + restauranteLogado.getNome());
-        try {
-            restauranteService.visualizarPerfil(restauranteLogado);
-        } catch (Exception e) {
-            TerminalUtils.erro(e.getMessage());
-        }
+        System.out.println("  ID       : " + restauranteLogado.getId());
+        System.out.println("  Nome     : " + restauranteLogado.getNome());
+        System.out.println("  CNPJ     : " + restauranteLogado.getCnpj());
+        System.out.println("  Telefone : " + restauranteLogado.getTelefone());
+        System.out.println("  Categoria: " + restauranteLogado.getCategoriaGlobalId());
+        System.out.println("  Status   : " + (restauranteLogado.isStatusAtivo() ? "ATIVO" : "BLOQUEADO"));
         TerminalUtils.pausar();
     }
 
