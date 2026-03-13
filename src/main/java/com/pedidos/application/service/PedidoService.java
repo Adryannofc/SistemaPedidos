@@ -5,76 +5,20 @@ import com.pedidos.domain.model.*;
 import com.pedidos.domain.repository.PedidoRepository;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
-    private final AreaEntregaService areaEntregaService;
-    private final HorarioService horarioService;
-    private final ProdutoService produtoService;
-    private final EnderecoService enderecoService;
 
-    public PedidoService(PedidoRepository pedidoRepository,
-                         AreaEntregaService areaEntregaService,
-                         HorarioService horarioService,
-                         ProdutoService produtoService,
-                         EnderecoService enderecoService) {
-        this.pedidoRepository   = pedidoRepository;
-        this.areaEntregaService = areaEntregaService;
-        this.horarioService     = horarioService;
-        this.produtoService     = produtoService;
-        this.enderecoService    = enderecoService;
+    public PedidoService(PedidoRepository pedidoRepository) {
+        this.pedidoRepository = pedidoRepository;
     }
 
-    public Pedido criarPedido(Cliente cliente, Carrinho carrinho, String enderecoId) {
-
-        String restauranteId = carrinho.getRestauranteId();
-
-        // 1. Restaurante aberto?
-        if (!horarioService.restauranteEstaAberto(restauranteId, LocalDateTime.now())) {
-            throw new IllegalStateException(
-                    "Restaurante fechado no momento. Verifique os horarios de funcionamento.");
-        }
-
-        // 2. Produtos todos ativos?
-        List<String> inativos = carrinho.getItens().stream()
-                .map(item -> produtoService.buscarPorId(item.getProdutoId()))
-                .filter(p -> !p.isStatusAtivo())
-                .map(Produto::getNome)
-                .collect(Collectors.toList());
-
-        if (!inativos.isEmpty()) {
-            throw new IllegalStateException(
-                    "Produto(s) indisponivel(is): " + inativos + ". Remova do carrinho.");
-        }
-
-        // 3. Endereço pertence ao cliente?
-        Endereco endereco = enderecoService.buscarPorId(enderecoId);
-        if (!endereco.getClienteId().equals(cliente.getId())) {
-            throw new IllegalArgumentException("Endereco nao pertence ao cliente.");
-        }
-
-        // 4. Bairro atendido + taxa
-        BigDecimal taxaEntrega = areaEntregaService.buscarTaxaPorBairro(
-                restauranteId, endereco.getBairro());
-
-        // 5. Total
-        BigDecimal subtotal = carrinho.getItens().stream()
-                .map(ItemPedido::calcularSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal total = subtotal.add(taxaEntrega)
-                .setScale(2, RoundingMode.HALF_UP);
-
-        // 6. Persiste
-        Pedido pedido = new Pedido(null, cliente.getId(), restauranteId, taxaEntrega);
+    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho) {
+        Pedido pedido = new Pedido(null, clienteId, restauranteId, BigDecimal.ZERO);
         carrinho.getItens().forEach(pedido::adicionarItem);
         pedido.calcularTotal();
-
         pedidoRepository.salvar(pedido);
         return pedido;
     }
@@ -116,5 +60,13 @@ public class PedidoService {
     public Pedido buscarPorId(String pedidoId) {
         return pedidoRepository.buscarPorId(pedidoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido nao encontrado"));
+    }
+
+    public List<Pedido> listarPorCliente(String clienteId) {
+        return pedidoRepository.buscarPorCliente(clienteId);
+    }
+
+    public List<Pedido> listarPorRestaurante(String restauranteId) {
+        return pedidoRepository.buscarPorRestaurante(restauranteId);
     }
 }

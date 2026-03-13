@@ -13,22 +13,15 @@ import java.util.Scanner;
 public class MenuRestaurante {
     private final MenuProdutos menuProdutos;
     private final MenuCategoriasCardapio menuCategorias;
-    private final MenuAreaEntrega menuAreaEntrega;
-    private final MenuHorarios menuHorarios;
-    private final MenuHistoricoPedidos menuHistorico;
     private final RestauranteService restauranteService;
     private final CategoriaService categoriaService;
     private final Scanner scanner;
 
     public MenuRestaurante(MenuProdutos menuProdutos, MenuCategoriasCardapio menuCategorias,
-                           MenuAreaEntrega menuAreaEntrega, MenuHorarios menuHorarios,
-                           MenuHistoricoPedidos menuHistorico, RestauranteService restauranteService,
+                           RestauranteService restauranteService,
                            CategoriaService categoriaService, Scanner scanner) {
         this.menuProdutos = menuProdutos;
         this.menuCategorias = menuCategorias;
-        this.menuAreaEntrega = menuAreaEntrega;
-        this.menuHorarios = menuHorarios;
-        this.menuHistorico = menuHistorico;
         this.restauranteService = restauranteService;
         this.categoriaService = categoriaService;
         this.scanner = scanner;
@@ -62,28 +55,22 @@ public class MenuRestaurante {
             System.out.println(TerminalUtils.SEPARADOR);
             System.out.println(TerminalUtils.linha("    1  \u00bb  Produtos"));
             System.out.println(TerminalUtils.linha("    2  \u00bb  Categorias do Cardapio"));
-            System.out.println(TerminalUtils.linha("    3  \u00bb  Area de Entrega"));
-            System.out.println(TerminalUtils.linha("    4  \u00bb  Horarios de Funcionamento"));
             System.out.println(TerminalUtils.SEPARADOR);
             System.out.println(TerminalUtils.linha("  CONTA"));
             System.out.println(TerminalUtils.SEPARADOR);
-            System.out.println(TerminalUtils.linha("    5  \u00bb  Historico de Pedidos"));
-            System.out.println(TerminalUtils.linha("    6  \u00bb  Perfil e Configuracoes"));
+            System.out.println(TerminalUtils.linha("    3  \u00bb  Perfil e Configuracoes"));
             System.out.println(TerminalUtils.SEPARADOR);
             System.out.println(TerminalUtils.linha("    0  \u00bb  Sair (Logout)"));
             System.out.println(TerminalUtils.BASE);
             System.out.println();
             System.out.print("  Escolha uma opcao: ");
 
-            int opcao = EntradaSegura.lerOpcao(scanner, 0, 6);
+            int opcao = EntradaSegura.lerOpcao(scanner, 0, 3);
 
             switch (opcao) {
                 case 1 -> menuProdutos.exibir(restauranteLogado);
                 case 2 -> menuCategorias.exibir(restauranteLogado);
-                case 3 -> menuAreaEntrega.exibir(restauranteLogado);
-                case 4 -> menuHorarios.exibir(restauranteLogado);
-                case 5 -> menuHistorico.exibir(restauranteLogado);
-                case 6 -> exibirMenuPerfil(restauranteLogado);
+                case 3 -> exibirMenuPerfil(restauranteLogado);
                 case 0 -> {
                     if (confirmar("Deseja realmente sair da sua conta?")) {
                         return;
