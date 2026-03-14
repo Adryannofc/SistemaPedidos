@@ -3,26 +3,22 @@ package com.pedidos.application.service;
 import com.pedidos.domain.model.Restaurante;
 import com.pedidos.domain.model.Usuario;
 import com.pedidos.domain.repository.CategoriaGlobalRepository;
-import com.pedidos.domain.repository.UsuarioRepository;
+import com.pedidos.domain.repository.RestauranteRepository;
 
 import java.util.Optional;
 
 public class RestauranteService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final RestauranteRepository restauranteRepository;
     private final CategoriaGlobalRepository categoriaGlobalRepository;
     private final AutenticacaoService autenticacaoService;
 
-    public RestauranteService(UsuarioRepository usuarioRepository,
+    public RestauranteService(RestauranteRepository restauranteRepository,
                               CategoriaGlobalRepository categoriaGlobalRepository,
                               AutenticacaoService autenticacaoService) {
-        this.usuarioRepository = usuarioRepository;
+        this.restauranteRepository = restauranteRepository;
         this.categoriaGlobalRepository = categoriaGlobalRepository;
         this.autenticacaoService = autenticacaoService;
-    }
-
-    public void visualizarPerfil(Restaurante restaurante) {
-        restaurante.exibirDetalhes();
     }
 
     public void editarPerfil(Restaurante restaurante,
@@ -40,7 +36,7 @@ public class RestauranteService {
 
         String cnpjNormalizado = normalizarCnpj(novoCnpj);
 
-        boolean cnpjExiste = usuarioRepository.listarTodos()
+        boolean cnpjExiste = restauranteRepository.listarTodos()
                 .stream()
                 .filter(u -> !u.getId().equals(restaurante.getId()))
                 .filter(u -> u instanceof Restaurante)
@@ -55,7 +51,7 @@ public class RestauranteService {
         restaurante.setTelefone(novoTelefone);
         restaurante.setCnpj(cnpjNormalizado);
 
-        usuarioRepository.salvar(restaurante);
+        restauranteRepository.salvar(restaurante);
     }
 
     public void editarEmail(Restaurante restaurante,
@@ -65,7 +61,7 @@ public class RestauranteService {
             throw new IllegalArgumentException("E-mail ínvalido");
         }
 
-        boolean emailExiste = usuarioRepository.listarTodos()
+        boolean emailExiste = restauranteRepository.listarTodos()
                 .stream()
                 .filter(u -> !u.getId().equals(restaurante.getId()))
                 .anyMatch(u -> u.getEmail().equalsIgnoreCase(novoEmail));
@@ -76,7 +72,7 @@ public class RestauranteService {
 
         restaurante.setEmail(novoEmail);
 
-        usuarioRepository.salvar(restaurante);
+        restauranteRepository.salvar(restaurante);
     }
 
     public void alterarCategoria(Restaurante restaurante,
@@ -98,7 +94,7 @@ public class RestauranteService {
 
         restaurante.setCategoriaGlobalId(novaCategoriaGlobalId);
 
-        usuarioRepository.salvar(restaurante);
+        restauranteRepository.salvar(restaurante);
     }
 
     public void alterarSenha(Restaurante restaurante,
@@ -122,12 +118,12 @@ public class RestauranteService {
         String novoHash = autenticacaoService.hashSenha(novaSenha);
 
         restaurante.setSenhaHash(novoHash);
-        usuarioRepository.salvar(restaurante);
+        restauranteRepository.salvar(restaurante);
     }
 
     public Restaurante buscarRestaurantePorId(String id) {
 
-        Usuario usuario = usuarioRepository.buscarPorId(id)
+        Usuario usuario = restauranteRepository.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado"));
 
         if (!(usuario instanceof Restaurante)) {

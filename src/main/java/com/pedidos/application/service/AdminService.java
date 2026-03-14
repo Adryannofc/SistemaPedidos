@@ -28,10 +28,6 @@ public class AdminService {
         adminRepository.salvar(admin);
     }
 
-    public void visualizarPerfil(Usuario usuario) {
-        usuario.exibirDetalhes();
-    }
-
     public void alterarSenha(Usuario usuario, String senhaAtual, String novaSenha, String confirmacaoSenha) {
         String hashAtual = autenticacaoService.hashSenha(senhaAtual);
         if (!usuario.verificarSenha(hashAtual)) {

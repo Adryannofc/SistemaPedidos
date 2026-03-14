@@ -2,7 +2,7 @@ package com.pedidos.presentation.menu;
 
 import com.pedidos.application.service.*;
 import com.pedidos.domain.model.*;
-import com.pedidos.domain.repository.*;
+import com.pedidos.domain.repository.RestauranteRepository;
 import com.pedidos.presentation.admin.MenuCategorias;
 import com.pedidos.presentation.restaurante.*;
 import com.pedidos.presentation.util.EntradaSegura;
@@ -17,14 +17,9 @@ public class MenuLogin {
     private final CategoriaService categoriaService;
     private final ProdutoService produtoService;
     private final RestauranteService restauranteService;
-    private final AreaEntregaService areaEntregaService;
-    private final HorarioService horarioService;
-    private final HistoricoService historicoService;
     private final PedidoService pedidoService;
-    private final EnderecoService enderecoService;
     private final CarrinhoService carrinhoService;
-    private final FavoritosService favoritosService;
-    private final RestauranteQueryRepository restauranteQueryRepository;
+    private final RestauranteRepository restauranteRepo;
 
     private final Scanner scan = new Scanner(System.in);
 
@@ -34,28 +29,18 @@ public class MenuLogin {
                      CategoriaService categoriaService,
                      ProdutoService produtoService,
                      RestauranteService restauranteService,
-                     AreaEntregaService areaEntregaService,
-                     HorarioService horarioService,
-                     HistoricoService historicoService,
                      PedidoService pedidoService,
-                     EnderecoService enderecoService,
                      CarrinhoService carrinhoService,
-                     FavoritosService favoritosService,
-                     RestauranteQueryRepository restauranteQueryRepository) {
+                     RestauranteRepository restauranteRepo) {
         this.autenticacaoService = autenticacaoService;
         this.adminService = adminService;
         this.clienteService = clienteService;
         this.categoriaService = categoriaService;
         this.produtoService = produtoService;
         this.restauranteService = restauranteService;
-        this.areaEntregaService = areaEntregaService;
-        this.horarioService = horarioService;
-        this.historicoService = historicoService;
         this.pedidoService = pedidoService;
-        this.enderecoService = enderecoService;
         this.carrinhoService = carrinhoService;
-        this.favoritosService = favoritosService;
-        this.restauranteQueryRepository = restauranteQueryRepository;
+        this.restauranteRepo = restauranteRepo;
     }
 
     public void iniciar() {
@@ -83,12 +68,8 @@ public class MenuLogin {
                         Restaurante restauranteLogado = (Restaurante) usuario;
                         MenuProdutos menuProdutos = new MenuProdutos(produtoService, categoriaService, scan);
                         MenuCategoriasCardapio menuCats = new MenuCategoriasCardapio(categoriaService, scan);
-                        MenuAreaEntrega menuArea = new MenuAreaEntrega(areaEntregaService, scan);
-                        MenuHorarios menuHorarios = new MenuHorarios(horarioService, scan);
-                        MenuHistoricoPedidos menuHistorico = new MenuHistoricoPedidos(historicoService, pedidoService, scan);
                         new MenuRestaurante(
-                                menuProdutos, menuCats, menuArea,
-                                menuHorarios, menuHistorico,
+                                menuProdutos, menuCats,
                                 restauranteService, categoriaService, scan
                         ).exibir(restauranteLogado);
                     }
@@ -97,13 +78,10 @@ public class MenuLogin {
                         new MenuCliente(
                                 clienteLogado,
                                 clienteService,
-                                enderecoService,
-                                historicoService,
                                 pedidoService,
                                 carrinhoService,
-                                favoritosService,
                                 produtoService,
-                                restauranteQueryRepository,
+                                restauranteRepo,
                                 scan
                         ).iniciar();
                     }
