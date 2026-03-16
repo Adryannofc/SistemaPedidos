@@ -13,6 +13,12 @@ public class AdminService {
     private final AutenticacaoService autenticacaoService;
     private final RestauranteRepository restauranteRepository;
 
+    /**
+     * Construtor da classe
+     * @param adminRepository gerencia os dados de um admin
+     * @param autenticacaoService verifica se as credenciais estao corretas
+     * @param restauranteRepository gerencia os dados dos restaurantes
+     */
     public AdminService(AdminRepository adminRepository, AutenticacaoService autenticacaoService, RestauranteRepository restauranteRepository) {
         this.adminRepository = adminRepository;
         this.autenticacaoService = autenticacaoService;
@@ -21,9 +27,9 @@ public class AdminService {
 
     /**
      *  Registra um novo administrador no sistema com as credencias informadas.
-     * @param nome
-     * @param email
-     * @param senha
+     * @param nome  identificador pessoal fornecido pelo usuario que sera registrado
+     * @param email credencial de acesso fornecido pelo usuario que sera registrado
+     * @param senha credencial de acesso fornecido pelo usuario que sera registrado
      * @throws IllegalArgumentException se ja tiver o email informado cadastrado
      */
     public void cadastrarAdmin(String nome, String email, String senha) {
@@ -81,7 +87,7 @@ public class AdminService {
 
     /**
      * Bloqueia um restaurante, tornado-o invisivel e desativado no sistema
-     * @param id
+     * @param id identificador unico do restaurante
      * @throws IllegalArgumentException se nenhum restaurante for encontrado com id informado
      */
     public void bloquearRestaurante(String id) {
@@ -91,7 +97,7 @@ public class AdminService {
     }
 
     /**
-     * Deleta um restaurante do sistema com id fornecido
+     * Deleta um restaurante do sistema com id verificado fornecido
      * @param id identificador unico do restaurante
      * @throws IllegalArgumentException se nenhum restaurante for encontrado com id informado
      */
@@ -102,7 +108,7 @@ public class AdminService {
 
     /**
      * Procura restaurante com id fornecido.
-     * @param id idetificador do restaurante
+     * @param id identificador do restaurante
      * @return o restaurante correspondente ao id informado
      * @throws IllegalArgumentException se nenhum restaurante foi encontrado com id informado.
      */
