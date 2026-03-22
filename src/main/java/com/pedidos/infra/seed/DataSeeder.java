@@ -5,9 +5,6 @@ import com.pedidos.domain.model.*;
 import com.pedidos.domain.repository.*;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.UUID;
 
 public class DataSeeder {
 
@@ -18,13 +15,12 @@ public class DataSeeder {
     private final ProdutoRepository produtoRepository;
     private final CategoriaGlobalRepository categoriaGlobalRepository;
     private final CategoriaCardapioRepository categoriaCardapioRepository;
-    private final EnderecoRepository enderecoRepository;
-    private final HorarioFuncionamentoRepository horarioFuncionamentoRepository;
-    private final AreaEntregaRepository areaEntregaRepository;
-
 
     public DataSeeder(AdminRepository adminRepo, ClienteRepository clienteRepo,
-                      RestauranteRepository restRepo, AutenticacaoService authService, ProdutoRepository produtoRepository, CategoriaGlobalRepository categoriaGlobalRepository, CategoriaCardapioRepository categoriaCardapioRepository, EnderecoRepository enderecoRepository, HorarioFuncionamentoRepository horarioFuncionamentoRepository, AreaEntregaRepository areaEntregaRepository) {
+                      RestauranteRepository restRepo, AutenticacaoService authService,
+                      ProdutoRepository produtoRepository,
+                      CategoriaGlobalRepository categoriaGlobalRepository,
+                      CategoriaCardapioRepository categoriaCardapioRepository) {
         this.adminRepo = adminRepo;
         this.clienteRepo = clienteRepo;
         this.restRepo = restRepo;
@@ -32,9 +28,6 @@ public class DataSeeder {
         this.produtoRepository = produtoRepository;
         this.categoriaGlobalRepository = categoriaGlobalRepository;
         this.categoriaCardapioRepository = categoriaCardapioRepository;
-        this.enderecoRepository = enderecoRepository;
-        this.horarioFuncionamentoRepository = horarioFuncionamentoRepository;
-        this.areaEntregaRepository = areaEntregaRepository;
     }
 
     public void popular() {
@@ -59,10 +52,6 @@ public class DataSeeder {
         restaurante1.setStatusAtivo(true);
         restRepo.salvar(restaurante1);
 
-        // ========== CATEGORIAS DO CARDÁPIO - RESTAURANTE 1 ==========
-        // Nota: Restaurante 1 não usa categorias de cardápio customizadas,
-        // usa apenas a categoria global. Portanto, não criamos CategoriaCardapio para ele.
-
         // ========== PRODUTOS - RESTAURANTE 1 ==========
         Produto xBurguer = new Produto("X-Burguer", "Hambúrguer com queijo e alface", new BigDecimal("18.90"), null, restaurante1.getId());
         xBurguer.setStatusAtivo(true);
@@ -79,26 +68,6 @@ public class DataSeeder {
         Produto fritas = new Produto("Fritas G", "Batata frita grande", new BigDecimal("12.00"), null, restaurante1.getId());
         fritas.setStatusAtivo(false);
         produtoRepository.salvar(fritas);
-
-        // ========== HORÁRIOS DE FUNCIONAMENTO - RESTAURANTE 1 ==========
-        // Segunda a sexta: 11h às 23h
-        for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante1.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
-            horarioFuncionamentoRepository.salvar(horario);
-        }
-
-        // Sábado e domingo: 12h à 00h
-        for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.SATURDAY, DayOfWeek.SUNDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante1.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
-            horarioFuncionamentoRepository.salvar(horario);
-        }
-
-        // ========== ÁREAS DE ENTREGA - RESTAURANTE 1 ==========
-        AreaEntrega areaCentro1 = new AreaEntrega(restaurante1.getId(), "Centro", new BigDecimal("2.0"), new BigDecimal("5.00"), 30);
-        areaEntregaRepository.salvar(areaCentro1);
-
-        AreaEntrega areaJardimAmerica = new AreaEntrega(restaurante1.getId(), "Jardim América", new BigDecimal("5.0"), new BigDecimal("8.00"), 45);
-        areaEntregaRepository.salvar(areaJardimAmerica);
 
         // ========== RESTAURANTE 2 - PIZZARIA BELLA ==========
         Restaurante restaurante2 = new Restaurante(
@@ -132,20 +101,6 @@ public class DataSeeder {
         pizzaChocolate.setStatusAtivo(true);
         produtoRepository.salvar(pizzaChocolate);
 
-        // ========== HORÁRIOS DE FUNCIONAMENTO - RESTAURANTE 2 ==========
-        // Terça a domingo: 18h às 23h30
-        for (DayOfWeek dia : new DayOfWeek[]{DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY}) {
-            HorarioFuncionamento horario = new HorarioFuncionamento(restaurante2.getId(), dia, LocalTime.of(11, 0), LocalTime.of(23, 0));
-            horarioFuncionamentoRepository.salvar(horario);
-        }
-
-        // ========== ÁREAS DE ENTREGA - RESTAURANTE 2 ==========
-        AreaEntrega areaCentro2 = new AreaEntrega(restaurante2.getId(), "Centro", new BigDecimal("3.0"), new BigDecimal("6.00"), 40);
-        areaEntregaRepository.salvar(areaCentro2);
-
-        AreaEntrega areaVilaNova = new AreaEntrega(restaurante2.getId(), "Vila Nova", new BigDecimal("7.0"), new BigDecimal("10.00"), 55);
-        areaEntregaRepository.salvar(areaVilaNova);
-
         // ========== CLIENTE 1 - JOÃO SILVA ==========
         Cliente cliente1 = new Cliente(
                 "João Silva",
@@ -156,16 +111,6 @@ public class DataSeeder {
         );
         clienteRepo.salvar(cliente1);
 
-        // ========== ENDEREÇO - CLIENTE 1 ==========
-        Endereco endereco1 = new Endereco(
-                cliente1.getId(),
-                "Casa",
-                "Rua das Flores",
-                "Centro",
-                true
-        );
-        enderecoRepository.salvar(endereco1);
-
         // ========== CLIENTE 2 - MARIA SOUZA ==========
         Cliente cliente2 = new Cliente(
                 "Maria Souza",
@@ -175,16 +120,6 @@ public class DataSeeder {
                 "44988880002"
         );
         clienteRepo.salvar(cliente2);
-
-        // ========== ENDEREÇO - CLIENTE 2 ==========
-        Endereco endereco2 = new Endereco(
-                cliente2.getId(),
-                "Trabalho",
-                "Av. Brasil",
-                "Jardim América",
-                true
-        );
-        enderecoRepository.salvar(endereco2);
 
         // ========== ADMIN ==========
         Admin admin = new Admin(

@@ -1,7 +1,6 @@
 package com.pedidos.presentation;
 
 import com.pedidos.application.service.*;
-import com.pedidos.domain.repository.*;
 import com.pedidos.infra.repository.impl.*;
 import com.pedidos.infra.seed.DataSeeder;
 import com.pedidos.presentation.menu.MenuLogin;
@@ -20,12 +19,7 @@ public class Main {
         CategoriaGlobalRepositoryMemoria categoriaGlobalRepo = new CategoriaGlobalRepositoryMemoria();
         CategoriaCardapioRepositoryMemoria categoriaCardapioRepo = new CategoriaCardapioRepositoryMemoria();
         ProdutoRepositoryMemoria produtoRepo = new ProdutoRepositoryMemoria();
-        AreaEntregaRepositoryMemoria areaEntregaRepo = new AreaEntregaRepositoryMemoria();
-        HorarioFuncionamentoRepositoryMemoria horarioRepo = new HorarioFuncionamentoRepositoryMemoria();
-        EnderecoRepositoryMemoria enderecoRepo = new EnderecoRepositoryMemoria();
         PedidoRepositoryMemoria pedidoRepo = new PedidoRepositoryMemoria();
-        FavoritosRepositoryMemoria favoritosRepo = new FavoritosRepositoryMemoria(clienteRepo);
-        RestauranteQueryRepositoryMemoria restauranteQueryRepositoryMemoria = new RestauranteQueryRepositoryMemoria(restauranteRepo, horarioRepo);
 
         // --- Services ---
         AutenticacaoService authService = new AutenticacaoService(adminRepo, restauranteRepo, clienteRepo);
@@ -34,19 +28,13 @@ public class Main {
         CategoriaService categoriaService = new CategoriaService(categoriaGlobalRepo, categoriaCardapioRepo, restauranteRepo, produtoRepo);
         ProdutoService produtoService = new ProdutoService(produtoRepo);
         RestauranteService restauranteService = new RestauranteService(restauranteRepo, categoriaGlobalRepo, authService);
-        AreaEntregaService areaEntregaService = new AreaEntregaService(areaEntregaRepo);
-        HorarioService horarioService = new HorarioService(horarioRepo);
-        EnderecoService enderecoService = new EnderecoService(enderecoRepo);
-        HistoricoService historicoService = new HistoricoService(pedidoRepo);
-        PedidoService pedidoService = new PedidoService(pedidoRepo, areaEntregaService, horarioService, produtoService, enderecoService);
+        PedidoService pedidoService = new PedidoService(pedidoRepo);
         CarrinhoService carrinhoService = new CarrinhoService();
-        FavoritosService favoritosService = new FavoritosService(favoritosRepo, restauranteQueryRepositoryMemoria);
 
         // --- Seed ---
         DataSeeder seeder = new DataSeeder(
                 adminRepo, clienteRepo, restauranteRepo, authService,
-                produtoRepo, categoriaGlobalRepo, categoriaCardapioRepo,
-                enderecoRepo, horarioRepo, areaEntregaRepo
+                produtoRepo, categoriaGlobalRepo, categoriaCardapioRepo
         );
         seeder.popular();
 
@@ -54,9 +42,7 @@ public class Main {
         new MenuLogin(
                 authService, adminService, clienteService,
                 categoriaService, produtoService, restauranteService,
-                areaEntregaService, horarioService, historicoService,
-                pedidoService, enderecoService, carrinhoService,
-                favoritosService, restauranteQueryRepositoryMemoria
+                pedidoService, carrinhoService, restauranteRepo
         ).iniciar();
     }
 }

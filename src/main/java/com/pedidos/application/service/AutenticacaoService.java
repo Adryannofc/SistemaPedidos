@@ -13,12 +13,19 @@ public class AutenticacaoService {
     private final RestauranteRepository restauranteRepository;
     private final ClienteRepository clienteRepository;
 
+
     public AutenticacaoService(AdminRepository adminRepository, RestauranteRepository restauranteRepository, ClienteRepository clienteRepository) {
         this.adminRepository = adminRepository;
         this.restauranteRepository = restauranteRepository;
         this.clienteRepository = clienteRepository;
     }
 
+    /**
+     * Criptrografa a senha do usuario
+     * @param senha
+     * @return para senha criptografada em String
+     * @ throw trata erro geracional do hash
+     */
     public String hashSenha(String senha) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -36,6 +43,13 @@ public class AutenticacaoService {
         }
     }
 
+    /**
+     * Verifica se a senha corresponde a algo existente(Autenticação)
+     * @param email
+     * @param senha
+     * @return usuario
+     * @throw tratamento de erro na autenticação
+     */
     public Usuario autenticar(String email, String senha) {
         String senhaHash = hashSenha(senha);
 

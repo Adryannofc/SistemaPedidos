@@ -5,73 +5,36 @@ import com.pedidos.domain.model.*;
 import com.pedidos.domain.repository.PedidoRepository;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
-    private final AreaEntregaService areaEntregaService;
-    private final HorarioService horarioService;
-    private final ProdutoService produtoService;
-    private final EnderecoService enderecoService;
 
-    public PedidoService(PedidoRepository pedidoRepository,
-                         AreaEntregaService areaEntregaService,
-                         HorarioService horarioService,
-                         ProdutoService produtoService,
-                         EnderecoService enderecoService) {
-        this.pedidoRepository   = pedidoRepository;
-        this.areaEntregaService = areaEntregaService;
-        this.horarioService     = horarioService;
-        this.produtoService     = produtoService;
-        this.enderecoService    = enderecoService;
+    public PedidoService(PedidoRepository pedidoRepository) {
+        this.pedidoRepository = pedidoRepository;
     }
 
-    public Pedido criarPedido(Cliente cliente, Carrinho carrinho, String enderecoId) {
-
-        String restauranteId = carrinho.getRestauranteId();
-
-        // 1. Restaurante aberto?
-        if (!horarioService.restauranteEstaAberto(restauranteId, LocalDateTime.now())) {
-            throw new IllegalStateException(
-                    "Restaurante fechado no momento. Verifique os horarios de funcionamento.");
-        }
-
-        // 2. Produtos todos ativos?
-        List<String> inativos = carrinho.getItens().stream()
-                .map(item -> produtoService.buscarPorId(item.getProdutoId()))
-                .filter(p -> !p.isStatusAtivo())
-                .map(Produto::getNome)
-                .collect(Collectors.toList());
-
-        if (!inativos.isEmpty()) {
-            throw new IllegalStateException(
-                    "Produto(s) indisponivel(is): " + inativos + ". Remova do carrinho.");
-        }
-
-        // 3. Endereço pertence ao cliente?
-        Endereco endereco = enderecoService.buscarPorId(enderecoId);
-        if (!endereco.getClienteId().equals(cliente.getId())) {
-            throw new IllegalArgumentException("Endereco nao pertence ao cliente.");
-        }
-
-        // 4. Bairro atendido + taxa
-        BigDecimal taxaEntrega = areaEntregaService.buscarTaxaPorBairro(
-                restauranteId, endereco.getBairro());
-
-
-        // 6. Persiste
-        Pedido pedido = new Pedido(null, cliente.getId(), restauranteId, taxaEntrega);
+    /**
+     * Monstando o pedido final
+     * @param clienteId cliente que pediu
+     * @param restauranteId restaurante que foi pedido
+     * @param carrinho itens do pedido
+     * @return o pedido como um todo
+     */
+    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho) {
+        Pedido pedido = new Pedido(null, clienteId, restauranteId, BigDecimal.ZERO);
         carrinho.getItens().forEach(pedido::adicionarItem);
         pedido.calcularTotal();
-
         pedidoRepository.salvar(pedido);
         return pedido;
     }
 
+    /**
+     * Atualiza o status do pedido por parte do restaurante(ex: se já saiu para entrega)
+     * @param pedidoId
+     * @param novoStatus
+     */
     public void atualizarStatus(String pedidoId, StatusPedido novoStatus) {
         Pedido pedido = pedidoRepository.buscarPorId(pedidoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido nao encontrado"));
@@ -81,6 +44,11 @@ public class PedidoService {
         pedidoRepository.salvar(pedido);
     }
 
+    /**
+     * Recebe o estado atual para fazer tratamentos
+     * @param atual
+     * @param novo
+     */
     private void validarTransicao(StatusPedido atual, StatusPedido novo) {
         switch (atual) {
             case AGUARDANDO_CONFIRMACAO:
@@ -91,24 +59,8 @@ public class PedidoService {
                 break;
 
             case CONFIRMADO:
-                if (novo == StatusPedido.EM_PREPARO || novo == StatusPedido.CANCELADO) return;
+                if (novo == StatusPedido.ENTREGUE || novo == StatusPedido.CANCELADO) return;
                 if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO)
-                    throw new IllegalStateException(
-                            "Nao e possivel voltar ao status anterior.");
-                break;
-
-            case EM_PREPARO:
-                if (novo == StatusPedido.SAIU_PARA_ENTREGA || novo == StatusPedido.CANCELADO) return;
-                if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO || novo == StatusPedido.CONFIRMADO)
-                    throw new IllegalStateException(
-                            "Nao e possivel voltar ao status anterior.");
-                break;
-
-            case SAIU_PARA_ENTREGA:
-                if (novo == StatusPedido.ENTREGUE) return;
-                if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO
-                        || novo == StatusPedido.EM_PREPARO
-                        || novo == StatusPedido.CONFIRMADO)
                     throw new IllegalStateException(
                             "Nao e possivel voltar ao status anterior.");
                 break;
@@ -122,8 +74,26 @@ public class PedidoService {
         throw new IllegalStateException("Transicao de status invalida.");
     }
 
+    /**
+     * Metodo para pegar o pedido(usado geralmente para realizar alterações)
+     * @param pedidoId
+     * @return pedido pelo id
+     */
     public Pedido buscarPorId(String pedidoId) {
         return pedidoRepository.buscarPorId(pedidoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido nao encontrado"));
+    }
+
+    /**
+     * Usado para listar pedidos por cliente no menu do restaurante
+     * @param clienteId
+     * @return um pedido relacionado a tal cliente pelo id
+     */
+    public List<Pedido> listarPorCliente(String clienteId) {
+        return pedidoRepository.buscarPorCliente(clienteId);
+    }
+
+    public List<Pedido> listarPorRestaurante(String restauranteId) {
+        return pedidoRepository.buscarPorRestaurante(restauranteId);
     }
 }

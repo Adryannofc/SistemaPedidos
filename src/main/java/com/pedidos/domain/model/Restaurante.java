@@ -1,9 +1,6 @@
 package com.pedidos.domain.model;
 
 import com.pedidos.domain.enums.TipoUsuario;
-import com.pedidos.presentation.util.TerminalUtils;
-
-import java.util.UUID;
 
 public class Restaurante extends Usuario {
 
@@ -41,18 +38,6 @@ public class Restaurante extends Usuario {
         }
     }
 
-
-    @Override
-    public void exibirDetalhes() {
-        TerminalUtils.cabecalho("PERFIL RESTAURANTE");
-        System.out.println( "ID: " + getId());
-        System.out.println( "Nome: " + getNome());
-        System.out.println( "CNPJ: " + getCnpj());
-        System.out.println( "Telefone: " + getTelefone());
-        System.out.println( "Categoria: " + getCategoriaGlobalId());
-        System.out.println( "Status: " + (isStatusAtivo() ? "ATIVO" : "BLOQUEADO"));
-
-    }
 
     public String getCategoriaGlobalId() {
         return categoriaGlobalId;
