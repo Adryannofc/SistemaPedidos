@@ -57,9 +57,7 @@ public class CategoriaService {
         categoriaGlobalRepository.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
-        boolean temRestauranteVinculado = restauranteRepository.listarTodos().stream()
-                .filter(u -> u instanceof com.pedidos.domain.model.Restaurante)
-                .map(u -> (com.pedidos.domain.model.Restaurante) u)
+        boolean temRestauranteVinculado = restauranteRepository.listarRestaurantes().stream()
                 .anyMatch(r -> r.getCategoriaGlobalId().equals(id));
         if (temRestauranteVinculado) {
             throw new IllegalArgumentException("Categoria em uso por um restaurante — remoção bloqueada.");
@@ -97,7 +95,7 @@ public class CategoriaService {
     }
 
     public void removerCategoriaCardapio(String id) {
-        CategoriaCardapio categoria = categoriaCardapioRepository.buscarPorId(id)
+        categoriaCardapioRepository.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
         boolean temProdutoVinculado = produtoRepository.listarTodos().stream()
