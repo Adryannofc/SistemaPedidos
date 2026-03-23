@@ -53,16 +53,18 @@ public class PedidoService {
         switch (atual) {
             case AGUARDANDO_CONFIRMACAO:
                 if (novo == StatusPedido.CONFIRMADO || novo == StatusPedido.CANCELADO) return;
-                if (novo == StatusPedido.ENTREGUE)
-                    throw new IllegalStateException(
-                            "Pedido deve ser confirmado antes de ser entregue.");
                 break;
 
             case CONFIRMADO:
-                if (novo == StatusPedido.ENTREGUE || novo == StatusPedido.CANCELADO) return;
-                if (novo == StatusPedido.AGUARDANDO_CONFIRMACAO)
-                    throw new IllegalStateException(
-                            "Nao e possivel voltar ao status anterior.");
+                if (novo == StatusPedido.EM_PREPARO || novo == StatusPedido.CANCELADO) return;
+                break;
+
+            case EM_PREPARO:
+                if (novo == StatusPedido.SAIU_PARA_ENTREGA || novo == StatusPedido.CANCELADO) return;
+                break;
+
+            case SAIU_PARA_ENTREGA:
+                if (novo == StatusPedido.ENTREGUE) return;
                 break;
 
             case ENTREGUE:
