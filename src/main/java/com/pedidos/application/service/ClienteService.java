@@ -63,17 +63,17 @@ public class ClienteService {
     }
 
     public void alterarSenha(Usuario usuario, String senhaAtual, String novaSenha, String confirmacaoSenha) {
-        String hashAtual = autenticacaoService.hashSenha(senhaAtual);
-        if (!usuario.verificarSenha(hashAtual)) {
-            throw new IllegalArgumentException("Senha atual incorreta.");
+        if (novaSenha.length() < 6) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
         }
 
         if (!novaSenha.equals(confirmacaoSenha)) {
             throw new IllegalArgumentException("Nova senha e confirmação não coincidem.");
         }
 
-        if (novaSenha.length() < 6) {
-            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+        String hashAtual = autenticacaoService.hashSenha(senhaAtual);
+        if (!usuario.verificarSenha(hashAtual)) {
+            throw new IllegalArgumentException("Senha atual incorreta.");
         }
 
         String novoHash = autenticacaoService.hashSenha(novaSenha);
