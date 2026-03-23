@@ -15,7 +15,12 @@ public class CarrinhoService {
         return carrinho;
     }
 
-    /** Adiciona produto ao carrinho. Valida quantidade e status ativo. */
+    /**
+     * Valida produto no carrinha e adiciona
+     * @param produto Produto fornecido pelo usuario
+     * @param quantidade Numero de unidades do produto
+     * @throws IllegalArgumentException Produto deve ser maior que zero
+     */
     public void adicionarItem(Produto produto, int quantidade) {
         validarCarrinhoAtivo();
 
