@@ -72,8 +72,8 @@ public class Produto {
     }
 
     public void setPreco(BigDecimal preco) {
-        if (preco == null || preco.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Preço não pode ser nulo ou negativo.");
+        if (preco == null || preco.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Preço deve ser maior que zero.");
         }
         this.preco = preco;
     }

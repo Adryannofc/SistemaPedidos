@@ -68,12 +68,12 @@ public class PedidoService {
                 break;
 
             case ENTREGUE:
-                throw new IllegalStateException("Pedido ja entregue — status nao pode ser alterado.");
+                throw new IllegalStateException("Pedido já entregue — status não pode ser alterado.");
 
             case CANCELADO:
-                throw new IllegalStateException("Pedido cancelado — status nao pode ser alterado.");
+                throw new IllegalStateException("Pedido cancelado — status não pode ser alterado.");
         }
-        throw new IllegalStateException("Transicao de status invalida.");
+        throw new IllegalStateException("Transição de status inválida.");
     }
 
     /**

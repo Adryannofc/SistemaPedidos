@@ -29,7 +29,7 @@ public abstract class Usuario {
     }
 
     public void setNome(String nome) {
-        if (nome == null || !nome.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s]+$")) {
+        if (nome == null || !nome.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s\\-]+$")) {
             throw new IllegalArgumentException("Nome inválido! Utilize apenas letras.");
         }
         this.nome = nome.trim();
