@@ -21,8 +21,8 @@ public class Pedido {
 
     public Pedido(String id, String clienteId, String restauranteId, BigDecimal taxaEntrega) {
         this.id = (id != null) ? id : UUID.randomUUID().toString();
-        this.clienteId = (clienteId != null) ? clienteId.toString() : UUID.randomUUID().toString();
-        this.restauranteId = (restauranteId != null) ? restauranteId.toString() : UUID.randomUUID().toString();
+        this.clienteId = (clienteId != null) ? clienteId : UUID.randomUUID().toString();
+        this.restauranteId = (restauranteId != null) ? restauranteId : UUID.randomUUID().toString();
         this.taxaEntrega = (taxaEntrega != null) ? taxaEntrega : BigDecimal.ZERO;
         this.dataPedido = LocalDateTime.now();
         this.total = BigDecimal.ZERO;
@@ -70,14 +70,10 @@ public class Pedido {
     }
 
     public BigDecimal calcularTotal() {
-        BigDecimal soma = BigDecimal.ZERO;
-
-        for (ItemPedido item : itens) {
-            soma = soma.add(item.calcularSubtotal());
-        }
-
-        total = soma.add(taxaEntrega);
-        return total;
+        return itens.stream()
+                .map(ItemPedido::calcularSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(taxaEntrega);
     }
 
     @Override

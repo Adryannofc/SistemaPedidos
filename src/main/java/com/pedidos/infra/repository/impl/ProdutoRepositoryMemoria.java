@@ -22,19 +22,6 @@ public class ProdutoRepositoryMemoria implements ProdutoRepository {
         return Collections.unmodifiableList(new ArrayList<>(storage.values()));
     }
 
-    public List<Produto> buscarPorRestauranteId(String restauranteId) {
-        return storage.values().stream()
-                .filter(produto -> produto.getRestauranteId().equals(restauranteId))
-                .toList();
-    }
-
-    public List<Produto> listarAtivosPorRestaurante(String restauranteId) {
-        return storage.values().stream()
-                .filter(p -> p.isStatusAtivo())
-                .filter(p -> p.getRestauranteId().equals(restauranteId))
-                .toList();
-    }
-
     @Override
     public void deletar(String id) {
         storage.remove(id);
