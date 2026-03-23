@@ -46,7 +46,7 @@ public class CarrinhoService {
         );
     }
 
-    /** Remove um item pelo índice (0-based). */
+    /** Remove um item do carrinho pelo ID do produto.*/
     public void removerItem(String produtoId) {
         validarCarrinhoAtivo();
         carrinho.removerItem(produtoId);
