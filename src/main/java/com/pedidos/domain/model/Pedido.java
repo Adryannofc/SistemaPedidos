@@ -18,6 +18,8 @@ public class Pedido {
     private BigDecimal taxaEntrega;
     private BigDecimal total;
     private LocalDateTime dataPedido;
+    private Endereco enderecoEntrega;
+    private String codigoConfirmacao;
 
     public Pedido(String id, String clienteId, String restauranteId, BigDecimal taxaEntrega) {
         this.id = (id != null) ? id : UUID.randomUUID().toString();
@@ -63,6 +65,22 @@ public class Pedido {
 
     public LocalDateTime getDataPedido() {
         return dataPedido;
+    }
+
+    public Endereco getEnderecoEntrega() {
+        return enderecoEntrega;
+    }
+
+    public void setEnderecoEntrega(Endereco enderecoEntrega) {
+        this.enderecoEntrega = enderecoEntrega;
+    }
+
+    public String getCodigoConfirmacao() {
+        return codigoConfirmacao;
+    }
+
+    public void setCodigoConfirmacao(String codigoConfirmacao) {
+        this.codigoConfirmacao = codigoConfirmacao;
     }
 
     public void adicionarItem(ItemPedido item) {
