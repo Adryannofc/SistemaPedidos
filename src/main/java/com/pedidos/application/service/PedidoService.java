@@ -22,8 +22,12 @@ public class PedidoService {
      * @param carrinho itens do pedido
      * @return o pedido como um todo
      */
-    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho) {
+    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho, Endereco enderecoEntrega) {
+        if (enderecoEntrega == null) {
+            throw new IllegalArgumentException("Informe um endereço de entrega antes de finalizar o pedido.");
+        }
         Pedido pedido = new Pedido(null, clienteId, restauranteId, BigDecimal.ZERO);
+        pedido.setEnderecoEntrega(enderecoEntrega);
         carrinho.getItens().forEach(pedido::adicionarItem);
         pedido.calcularTotal();
         pedidoRepository.salvar(pedido);

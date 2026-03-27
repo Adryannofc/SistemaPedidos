@@ -1,6 +1,7 @@
 package com.pedidos.application.service;
 
 import com.pedidos.domain.model.Cliente;
+import com.pedidos.domain.model.Endereco;
 import com.pedidos.domain.model.Usuario;
 import com.pedidos.domain.repository.AdminRepository;
 import com.pedidos.domain.repository.ClienteRepository;
@@ -53,6 +54,11 @@ public class ClienteService {
     public void editarCpf(Cliente cliente, String novoCpf) {
         validarCpf(novoCpf);
         cliente.setCpf(novoCpf);
+        clienteRepository.salvar(cliente);
+    }
+
+    public void salvarEndereco(Cliente cliente, String rua, String numero, String bairro, String cidade, String estado, String cep) {
+        cliente.setEnderecoEntrega(new Endereco(rua, numero, bairro, cidade, estado, cep));
         clienteRepository.salvar(cliente);
     }
 

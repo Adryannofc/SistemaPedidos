@@ -10,6 +10,7 @@ public class Cliente extends Usuario {
     private String cpf;
     private String telefone;
     private List<String> favoritos;
+    private Endereco enderecoEntrega;
 
     public Cliente(String nome, String email, String senhaHash, String cpf, String telefone) {
         super(nome, email, senhaHash, TipoUsuario.CLIENTE);
@@ -67,5 +68,13 @@ public class Cliente extends Usuario {
 
     public List<String> getFavoritos() {
         return new ArrayList<>(this.favoritos);
+    }
+
+    public Endereco getEnderecoEntrega() {
+        return enderecoEntrega;
+    }
+
+    public void setEnderecoEntrega(Endereco enderecoEntrega) {
+        this.enderecoEntrega = enderecoEntrega;
     }
 }
