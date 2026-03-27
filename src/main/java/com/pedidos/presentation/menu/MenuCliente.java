@@ -252,8 +252,28 @@ public class MenuCliente {
             List<Pedido> pedidos = pedidoService.listarPorCliente(clienteLogado.getId());
             if (pedidos.isEmpty()) {
                 TerminalUtils.aviso("Nenhum pedido encontrado.");
-            } else {
-                exibirListaPedidos(pedidos);
+                TerminalUtils.pausar();
+                return;
+            }
+
+            exibirListaPedidos(pedidos);
+
+            Pedido paraConfirmar = null;
+            for (Pedido p : pedidos) {
+                if (p.getStatus() == StatusPedido.SAIU_PARA_ENTREGA) {
+                    paraConfirmar = p;
+                    break;
+                }
+            }
+
+            if (paraConfirmar != null) {
+                System.out.println("  Pedido " + paraConfirmar.getId().substring(0, 8) + " saiu para entrega!");
+                System.out.print("  Digite o codigo de confirmacao (ou Enter para pular): ");
+                String codigo = scanner.nextLine().trim();
+                if (!codigo.isBlank()) {
+                    pedidoService.confirmarEntrega(paraConfirmar.getId(), codigo);
+                    TerminalUtils.sucesso("Entrega confirmada!");
+                }
             }
         } catch (Exception e) {
             TerminalUtils.erro(e.getMessage());
@@ -492,13 +512,15 @@ public class MenuCliente {
                 return;
             }
 
+            String codigo = clienteLogado.getCpf().substring(0, 4);
             Pedido pedido = pedidoService.criarPedido(
-                    clienteLogado.getId(), carrinho.getRestauranteId(), carrinho, endereco);
+                    clienteLogado.getId(), carrinho.getRestauranteId(), carrinho, endereco, codigo);
 
             carrinhoService.encerrarCarrinho();
 
             TerminalUtils.sucesso("Pedido realizado! ID: " + pedido.getId().substring(0, 8)
                     + " | Total: " + moeda.format(pedido.calcularTotal()));
+            System.out.println("  Seu codigo de confirmacao de entrega: [ " + codigo + " ]");
 
         } catch (Exception e) {
             TerminalUtils.erro(e.getMessage());

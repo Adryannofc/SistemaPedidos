@@ -22,16 +22,30 @@ public class PedidoService {
      * @param carrinho itens do pedido
      * @return o pedido como um todo
      */
-    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho, Endereco enderecoEntrega) {
+    public Pedido criarPedido(String clienteId, String restauranteId, Carrinho carrinho, Endereco enderecoEntrega, String codigoConfirmacao) {
         if (enderecoEntrega == null) {
             throw new IllegalArgumentException("Informe um endereço de entrega antes de finalizar o pedido.");
         }
         Pedido pedido = new Pedido(null, clienteId, restauranteId, BigDecimal.ZERO);
         pedido.setEnderecoEntrega(enderecoEntrega);
+        pedido.setCodigoConfirmacao(codigoConfirmacao);
         carrinho.getItens().forEach(pedido::adicionarItem);
         pedido.calcularTotal();
         pedidoRepository.salvar(pedido);
         return pedido;
+    }
+
+    public void confirmarEntrega(String pedidoId, String codigoDigitado) {
+        Pedido pedido = pedidoRepository.buscarPorId(pedidoId)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido nao encontrado."));
+        if (pedido.getStatus() != StatusPedido.SAIU_PARA_ENTREGA) {
+            throw new IllegalStateException("Pedido nao esta em status de entrega.");
+        }
+        if (!pedido.getCodigoConfirmacao().equals(codigoDigitado)) {
+            throw new IllegalArgumentException("Codigo incorreto.");
+        }
+        pedido.setStatus(StatusPedido.ENTREGUE);
+        pedidoRepository.salvar(pedido);
     }
 
     /**
