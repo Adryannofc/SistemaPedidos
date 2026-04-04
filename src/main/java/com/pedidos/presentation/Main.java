@@ -1,6 +1,7 @@
 package com.pedidos.presentation;
 
 import com.pedidos.application.service.*;
+import com.pedidos.infra.config.JPAUtil;
 import com.pedidos.infra.repository.impl.*;
 import com.pedidos.infra.seed.DataSeeder;
 import com.pedidos.presentation.menu.MenuLogin;
@@ -44,5 +45,8 @@ public class Main {
                 categoriaService, produtoService, restauranteService,
                 pedidoService, carrinhoService, restauranteRepo
         ).iniciar();
+
+        // --- Fecha recursos JPA ---
+        JPAUtil.close();
     }
 }
