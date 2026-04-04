@@ -1,6 +1,7 @@
 package com.pedidos.presentation;
 
 import com.pedidos.application.service.*;
+import com.pedidos.infra.config.FlywayConfig;
 import com.pedidos.infra.config.JPAUtil;
 import com.pedidos.infra.repository.impl.*;
 import com.pedidos.infra.seed.DataSeeder;
@@ -10,6 +11,14 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+
+        // --- Iniciando Flyway ---
+        try {
+            FlywayConfig.migrate();
+        } catch (Exception e) {
+            System.out.println("Flyway não executado: " + e.getMessage());
+        }
 
         Scanner scanner = new Scanner(System.in);
 
